@@ -55,6 +55,7 @@ func (s software) Reader() string {
 		"burningfp":  "kotm2p",
 		"burningfpa": "kotm2p",
 		"dragonsh":   "dragonsh",
+		"fatfury2":   "kotm2",
 		"fightfeva":  "fightfeva",
 		"gpilotsp":   "gpilotsp",
 		"kof95a":     "kof95a",
@@ -66,6 +67,7 @@ func (s software) Reader() string {
 		"pbobblenb":  "pbobblenb",
 		"samsho3":    "kof95a",
 		"sengoku2":   "kotm2",
+		"ssideki":    "viewpoin",
 		"viewpoin":   "viewpoin",
 		"viewpoinp":  "gpilotsp",
 		"wh1":        "kotm2",
@@ -100,7 +102,12 @@ func (s software) Screenshot() int {
 func (s software) SupportedSlot() bool {
 	for _, f := range s.Feature {
 		if f.Name == featureSlot {
-			return false
+			switch f.Value {
+			case "rom_fatfur2":
+				fallthrough
+			default:
+				return false
+			}
 		}
 	}
 	return true
