@@ -1,4 +1,6 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
+github.com/bodgit/plumbing v0.0.0-20200416225550-8a3ceab39dc5 h1:wlC6ooL2bI5HybCbP7fN3GbAe66Or4O1gea6dM2Piko=
+github.com/bodgit/plumbing v0.0.0-20200416225550-8a3ceab39dc5/go.mod h1:HvY/F2JCfHpm7AxnSMjhRl8QGDCmEvke8F9e3vbLRhY=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d h1:U+s90UTSYgptZMwQh2aRr3LuazLJIa+Pg3Kc1ylSYVY=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=

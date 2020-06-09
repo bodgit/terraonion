@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/bodgit/plumbing"
 	"github.com/gabriel-vasile/mimetype"
 )
 
@@ -241,7 +242,7 @@ func (common) read(g mameGame, r int, o romOpener) ([]byte, error) {
 			}
 
 			if i < len(readers)-2 {
-				intermediate = padROM(intermediate, int(pad*2), 0)
+				intermediate = plumbing.PaddedReader(intermediate, int64(pad*2), 0)
 			}
 
 			intermediates = append(intermediates, intermediate)
@@ -253,7 +254,7 @@ func (common) read(g mameGame, r int, o romOpener) ([]byte, error) {
 
 		for i, r := range readers {
 			if i < len(readers)-1 {
-				r = padROM(r, int(pad), 0)
+				r = plumbing.PaddedReader(r, int64(pad), 0)
 			}
 			padded = append(padded, r)
 		}

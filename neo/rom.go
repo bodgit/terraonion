@@ -6,16 +6,10 @@ import (
 	"io"
 )
 
-var (
-	errInvalidInterleave = errors.New("can only interleave two or four ROMs")
-)
+var errInvalidInterleave = errors.New("can only interleave two or four ROMs")
 
 func concatenateROM(readers ...io.Reader) io.Reader {
 	return io.MultiReader(readers...)
-}
-
-func padROM(r io.Reader, n int, fill byte) io.Reader {
-	return io.LimitReader(io.MultiReader(r, bytes.NewBuffer(bytes.Repeat([]byte{fill}, n))), int64(n))
 }
 
 func interleaveROM(width int64, readers ...io.Reader) (io.Reader, error) {
