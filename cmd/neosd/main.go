@@ -17,6 +17,12 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func init() {
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
@@ -162,7 +168,7 @@ func main() {
 
 	app.Name = "neosd"
 	app.Usage = "Terraonion NeoSD management utility"
-	app.Version = "1.0.0"
+	app.Version = fmt.Sprintf("%s, commit %s, built at %s", version, commit, date)
 
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -175,6 +181,7 @@ func main() {
 			Usage:       "Info on a " + neo.Extension + " file",
 			Description: "",
 			Action:      info,
+			ArgsUsage:   "FILE",
 			Flags: []cli.Flag{
 				&cli.BoolFlag{
 					Name:    "verbose",
@@ -188,6 +195,7 @@ func main() {
 			Usage:       "Create a " + neo.Extension + " file from an existing set of ROM images",
 			Description: "",
 			Action:      convert,
+			ArgsUsage:   "PATH",
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:    "directory",
