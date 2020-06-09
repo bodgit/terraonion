@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -111,17 +112,28 @@ type feature struct {
 	Value   string   `xml:"value,attr"`
 }
 
+type size uint64
+
+func (v *size) UnmarshalXMLAttr(attr xml.Attr) error {
+	i, err := strconv.ParseUint(attr.Value, 0, 64)
+	if err != nil {
+		return err
+	}
+	*v = size(i)
+	return nil
+}
+
 type dataArea struct {
 	XMLName xml.Name `xml:"dataarea"`
 	Name    string   `xml:"name,attr"`
-	Size    uint64   `xml:"size,attr"`
+	Size    size     `xml:"size,attr"`
 	ROM     []rom    `xml:"rom"`
 }
 
 type rom struct {
 	XMLName xml.Name `xml:"rom"`
 	Name    string   `xml:"name,attr"`
-	Size    uint64   `xml:"size,attr"`
+	Size    size     `xml:"size,attr"`
 	CRC     string   `xml:"crc,attr"`
 	SHA1    string   `xml:"sha1,attr"`
 	Status  string   `xml:"status,attr"`
