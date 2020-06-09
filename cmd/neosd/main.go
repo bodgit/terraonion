@@ -69,12 +69,12 @@ func info(c *cli.Context) error {
 	table.SetTablePadding(" ")
 	table.SetNoWhiteSpace(true)
 
-	table.Append([]string{"Name:", string(bytes.Trim(f.Header.Name[:], "\000"))})
-	table.Append([]string{"Manufacturer:", string(bytes.Trim(f.Header.Manufacturer[:], "\000"))})
-	table.Append([]string{"Year:", strconv.FormatUint(uint64(f.Header.Year), 10)})
-	table.Append([]string{"Genre:", f.Header.Genre.String()})
-	table.Append([]string{"Screenshot:", strconv.FormatUint(uint64(f.Header.Screenshot), 10)})
-	table.Append([]string{"NGH:", fmt.Sprintf("0x%x", f.Header.NGH)})
+	table.Append([]string{"Name:", f.Name})
+	table.Append([]string{"Manufacturer:", f.Manufacturer})
+	table.Append([]string{"Year:", strconv.FormatUint(uint64(f.Year), 10)})
+	table.Append([]string{"Genre:", f.Genre.String()})
+	table.Append([]string{"Screenshot:", strconv.FormatUint(uint64(f.Screenshot), 10)})
+	table.Append([]string{"NGH:", fmt.Sprintf("0x%x", f.NGH)})
 
 	table.Render()
 
@@ -115,19 +115,17 @@ func convert(c *cli.Context) error {
 
 	path := c.Args().First()
 
-	n, err := neo.New(path)
+	n, err := neo.NewFile(path)
 	if err != nil {
 		return cli.NewExitError(err, 1)
 	}
 
 	if c.IsSet("name") {
-		copy(n.Name[:], bytes.Repeat([]byte{0}, neo.NameLength))
-		copy(n.Name[:], c.String("name"))
+		n.Name = c.String("name")
 	}
 
 	if c.IsSet("manufacturer") {
-		copy(n.Manufacturer[:], bytes.Repeat([]byte{0}, neo.ManufacturerLength))
-		copy(n.Manufacturer[:], c.String("manufacturer"))
+		n.Manufacturer = c.String("manufacturer")
 	}
 
 	if c.IsSet("year") {

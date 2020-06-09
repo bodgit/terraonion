@@ -20,10 +20,6 @@ import (
 )
 
 const (
-	offsetNGH int = 0x108
-)
-
-const (
 	_                = iota
 	oneTwentyEightKB = 128 << (10 * iota)
 	oneMB, twoMB     = 1 << (10 * iota), 2 << (10 * iota)
@@ -503,10 +499,6 @@ func (f *File) readMAMEROM(path string) error {
 			return err
 		}
 		f.Size[i] = uint32(len(f.ROM[i]))
-	}
-
-	if len(f.ROM[P]) > offsetNGH+2 {
-		f.NGH = uint32(binary.LittleEndian.Uint16(f.ROM[P][offsetNGH:]))
 	}
 
 	return nil
