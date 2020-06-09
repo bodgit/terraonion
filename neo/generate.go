@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
 )
@@ -127,15 +128,34 @@ type rom struct {
 }
 
 func main() {
-	b, err := ioutil.ReadFile("mame.xml")
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dir, err := os.Open(cwd)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	names, err := dir.Readdirnames(0)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var games softwareLists
 
-	if err := xml.Unmarshal(b, &games); err != nil {
-		log.Fatal(err)
+	for _, name := range names {
+		if filepath.Ext(name) == ".xml" {
+			b, err := ioutil.ReadFile(name)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if err := xml.Unmarshal(b, &games); err != nil {
+				log.Fatal(err)
+			}
+		}
 	}
 
 	f, err := os.Create("games.go")
