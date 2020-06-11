@@ -1,12 +1,14 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/bodgit/plumbing v0.0.0-20200416225550-8a3ceab39dc5 h1:wlC6ooL2bI5HybCbP7fN3GbAe66Or4O1gea6dM2Piko=
 github.com/bodgit/plumbing v0.0.0-20200416225550-8a3ceab39dc5/go.mod h1:HvY/F2JCfHpm7AxnSMjhRl8QGDCmEvke8F9e3vbLRhY=
+github.com/bodgit/rom v0.0.0-20200606173703-1452f947df03 h1:F+FzjurLTRX+4r3l3TwQYnaXKVHX1ZNbftNbypbkvG0=
+github.com/bodgit/rom v0.0.0-20200606173703-1452f947df03/go.mod h1:z3qDEx7LdmmgXdkMrS5NCeAK8RqJIDEAKRUOA8YjbSU=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d h1:U+s90UTSYgptZMwQh2aRr3LuazLJIa+Pg3Kc1ylSYVY=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/gabriel-vasile/mimetype v1.0.2 h1:GKCo1TUCg0pV0R4atTcaLv/9SI2W9xPgMySZxUxcJOE=
-github.com/gabriel-vasile/mimetype v1.0.2/go.mod h1:6CDPel/o/3/s4+bp6kIbsWATq8pmgOisOPG40CJa6To=
+github.com/gabriel-vasile/mimetype v1.1.0 h1:+ahX+MvQPFve4kO9Qjjxf3j49i0ACdV236kJlOCRAnU=
+github.com/gabriel-vasile/mimetype v1.1.0/go.mod h1:6CDPel/o/3/s4+bp6kIbsWATq8pmgOisOPG40CJa6To=
 github.com/mattn/go-runewidth v0.0.7 h1:Ei8KR0497xHyKJPAv59M1dkC+rOZCMBJ+t3fZ+twI54=
 github.com/mattn/go-runewidth v0.0.7/go.mod h1:H031xJmbD/WCDINGzjvQ9THkh0rPKHF+m2gUSrubnMI=
 github.com/olekukonko/tablewriter v0.0.4 h1:vHD/YYe1Wolo78koG299f7V/VAS08c6IpCLn+Ejf/w8=
@@ -22,6 +24,8 @@ github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJy
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/urfave/cli/v2 v2.1.1 h1:Qt8FeAtxE/vfdrLmR3rxR6JRE0RoVmbXu8+6kZtYU4k=
 github.com/urfave/cli/v2 v2.1.1/go.mod h1:SE9GqnLQmjVa0iPEY0f1w3ygNIYcIJ0OKPMoW2caLfQ=
+github.com/uwedeportivo/torrentzip v1.0.0 h1:zj1hEqWb4x3OyKBalwnP0d45H8oaSbo/iNf7Cka2BoU=
+github.com/uwedeportivo/torrentzip v1.0.0/go.mod h1:PhiUYrV9vTPb6cFslnpRPWEsQzvQ60YNUJuglCYDUGo=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.2.2 h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=
 gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

@@ -82,10 +82,10 @@ func (s software) Reader() string {
 	return "common"
 }
 
-func (s software) ROM(area string) []rom {
+func (s software) FindDataArea(area string) *dataArea {
 	for _, da := range s.DataArea {
 		if da.Name == area {
-			return da.ROM
+			return &da
 		}
 	}
 	return nil
@@ -99,7 +99,7 @@ func (s software) Screenshot() int {
 	return 0
 }
 
-func (s software) SupportedSlot() bool {
+func (s software) IsSupportedSlot() bool {
 	for _, f := range s.Feature {
 		if f.Name == featureSlot {
 			switch f.Value {
@@ -137,12 +137,21 @@ type dataArea struct {
 	ROM     []rom    `xml:"rom"`
 }
 
+func (d dataArea) IsEmpty() bool {
+	count := 0
+	for _, r := range d.ROM {
+		if r.Status != "nodump" {
+			count++
+		}
+	}
+	return count == 0
+}
+
 type rom struct {
 	XMLName xml.Name `xml:"rom"`
 	Name    string   `xml:"name,attr"`
 	Size    size     `xml:"size,attr"`
 	CRC     string   `xml:"crc,attr"`
-	SHA1    string   `xml:"sha1,attr"`
 	Status  string   `xml:"status,attr"`
 }
 
@@ -206,7 +215,7 @@ package neo
 
 var mameGames = map[string]struct {
 	mameGame
-	reader       romReader
+	reader       gameReader
 	name         string
 	year         uint32
 	manufacturer string
@@ -215,28 +224,37 @@ var mameGames = map[string]struct {
 }{
 {{- range .SoftwareList }}
 {{- range .Software }}
-{{- if and (ne .Supported "no") .SupportedSlot }}
+{{- if and (ne .Supported "no") .IsSupportedSlot }}
 	"{{ .Name }}": {
 		mameGame{
 			{{ if .CloneOf }}"{{ .CloneOf }}"{{ else }}""{{ end }},
-			[...][]mameROM{
+			[...]mameArea{
 {{- $game := . }}
 {{- range areas }}
-{{- with $game.ROM . }}
+{{- with $game.FindDataArea . }}
 				{
-{{- range . }}
+					{{ .Size }},
+{{- if .IsEmpty }}
+					[]mameROM{},
+{{- else }}
+					[]mameROM{
+{{- range .ROM }}
 {{- if ne .Status "nodump" }}
-					{
-						"{{ .Name }}",
-						{{ .Size }},
-						[...]uint8{{"{"}}{{bytes .CRC}}{{"}"}},
-						[...]uint8{{"{"}}{{bytes .SHA1}}{{"}"}},
-					},
+						{
+							"{{ .Name }}",
+							{{ .Size }},
+							[]byte{{"{"}}{{bytes .CRC}}{{"}"}},
+						},
 {{- end }}
+{{- end }}
+					},
 {{- end }}
 				},
 {{- else }}
-				{},
+				{
+					0,
+					[]mameROM{},
+				},
 {{- end }}
 {{- end }}
 			},
