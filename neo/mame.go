@@ -17,6 +17,26 @@ const (
 	oneMB, twoMB     = 1 << (10 * iota), 2 << (10 * iota)
 )
 
+// CMC42 XOR keys
+const (
+	bangbeadGfxKey = 0xf8
+	ganryuGfxKey   = 0x07
+	kof99kaGfxKey  = 0x00
+	mslug3hGfxKey  = 0xad
+	nitdGfxKey     = 0xff
+	preisle2GfxKey = 0x9f
+	s1945pGfxKey   = 0x05
+	sengoku3GfxKey = 0xfe
+	zupapaGfxKey   = 0xbd
+)
+
+// CMC50 XOR keys
+const (
+	kof2000nGfxKey = 0x00
+	kof2001GfxKey  = 0x1e
+	jockeygpGfxKey = 0xac
+)
+
 type mameROM struct {
 	filename string
 	size     uint64
@@ -141,7 +161,40 @@ func commonCMC42Reader(f *File, g mameGame, readers [][]io.Reader, xor int) erro
 			if err != nil {
 				return err
 			}
-			f.ROM[C], f.ROM[S] = cmc42Decrypt(b, xor, int(g.area[S].size))
+			f.ROM[C] = cmc42GfxDecrypt(b, xor)
+			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func commonCMC50Reader(f *File, g mameGame, readers [][]io.Reader, xor int) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			if f.ROM[P], err = commonPReader(g.area[P], readers[P], regexp.MustCompile(`\.ep`)); err != nil {
+				return err
+			}
+		case S:
+			break
+		case M:
+			b, err := commonPaddedReader(g.area[M], readers[M])
+			if err != nil {
+				return err
+			}
+			f.ROM[M] = cmc50M1Decrypt(b)
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc50GfxDecrypt(b, xor)
+			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
 		default:
 			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
 				return err
@@ -179,7 +232,7 @@ func (common) read(f *File, g mameGame, readers [][]io.Reader) error {
 type bangbead struct{}
 
 func (bangbead) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, 0xf8)
+	return commonCMC42Reader(f, g, readers, bangbeadGfxKey)
 }
 
 // dragonsh has a couple of missing ROMs which are replaced with "erased" images of the expected size
@@ -239,7 +292,7 @@ func (fightfeva) read(f *File, g mameGame, readers [][]io.Reader) error {
 type ganryu struct{}
 
 func (ganryu) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, 0x07)
+	return commonCMC42Reader(f, g, readers, ganryuGfxKey)
 }
 
 func gpilotspPReader(a mameArea, readers []io.Reader) ([]byte, error) {
@@ -279,6 +332,20 @@ func (gpilotsp) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// kof2000n uses CMC50 encryption
+type kof2000n struct{}
+
+func (kof2000n) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonCMC50Reader(f, g, readers, kof2000nGfxKey)
+}
+
+// kof2001 uses CMC50 encryption
+type kof2001 struct{}
+
+func (kof2001) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonCMC50Reader(f, g, readers, kof2001GfxKey)
+}
+
 // kof95a is standard apart from the regular ROMs being named like patch ROMs
 type kof95a struct{}
 
@@ -307,7 +374,7 @@ func (kof95a) read(f *File, g mameGame, readers [][]io.Reader) error {
 type kof99ka struct{}
 
 func (kof99ka) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, 0x00)
+	return commonCMC42Reader(f, g, readers, kof99kaGfxKey)
 }
 
 func kotm2CReader(a mameArea, readers []io.Reader) ([]byte, error) {
@@ -403,18 +470,25 @@ func (kotm2p) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// jockeygp uses CMC50 encryption
+type jockeygp struct{}
+
+func (jockeygp) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonCMC50Reader(f, g, readers, jockeygpGfxKey)
+}
+
 // mslug3h uses CMC42 encryption
 type mslug3h struct{}
 
 func (mslug3h) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, 0xad)
+	return commonCMC42Reader(f, g, readers, mslug3hGfxKey)
 }
 
 // nitd uses CMC42 encryption
 type nitd struct{}
 
 func (nitd) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, 0xff)
+	return commonCMC42Reader(f, g, readers, nitdGfxKey)
 }
 
 // pbobblenb is standard apart from the ADPCM area has 2 MB of empty space prepended
@@ -451,21 +525,21 @@ func (pbobblenb) read(f *File, g mameGame, readers [][]io.Reader) error {
 type preisle2 struct{}
 
 func (preisle2) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, 0x9f)
+	return commonCMC42Reader(f, g, readers, preisle2GfxKey)
 }
 
 // s1945p uses CMC42 encryption
 type s1945p struct{}
 
 func (s1945p) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, 0x05)
+	return commonCMC42Reader(f, g, readers, s1945pGfxKey)
 }
 
 // sengoku3 uses CMC42 encryption
 type sengoku3 struct{}
 
 func (sengoku3) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, 0xfe)
+	return commonCMC42Reader(f, g, readers, sengoku3GfxKey)
 }
 
 func viewpoinCReader(a mameArea, readers []io.Reader) ([]byte, error) {
@@ -514,5 +588,5 @@ func (viewpoin) read(f *File, g mameGame, readers [][]io.Reader) error {
 type zupapa struct{}
 
 func (zupapa) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, 0xbd)
+	return commonCMC42Reader(f, g, readers, zupapaGfxKey)
 }

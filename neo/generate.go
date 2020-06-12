@@ -60,11 +60,16 @@ func (s software) Reader() string {
 		"fightfeva":  "fightfeva",
 		"ganryu":     "ganryu",
 		"gpilotsp":   "gpilotsp",
+		"kof2000n":   "kof2000n",
+		"kof2001":    "kof2001",
+		"kof2001h":   "kof2001",
 		"kof95a":     "kof95a",
 		"kof99ka":    "kof99ka",
 		"kotm2":      "kotm2",
 		"kotm2a":     "kotm2",
 		"kotm2p":     "kotm2p",
+		"jockeygp":   "jockeygp",
+		"jockeygpa":  "jockeygp",
 		"lresortp":   "kotm2p",
 		"mslug3h":    "mslug3h",
 		"nitd":       "nitd",
@@ -93,6 +98,12 @@ func (s software) Reader() string {
 }
 
 func (s software) FindDataArea(area string) *dataArea {
+	if area == "audiocpu" {
+		// Try and find an audiocrypt area first, both don't ever appear
+		if da := s.FindDataArea("audiocrypt"); da != nil {
+			return da
+		}
+	}
 	for _, da := range s.DataArea {
 		if da.Name == area {
 			return &da
@@ -116,6 +127,8 @@ func (s software) IsSupportedSlot() bool {
 			case "rom_fatfur2":
 				fallthrough
 			case "cmc42_bangbead", "cmc42_ganryu", "cmc42_kof99k", "cmc42_mslug3h", "cmc42_nitd", "cmc42_preisle2", "cmc42_s1945p", "cmc42_sengoku3", "cmc42_zupapa":
+				fallthrough
+			case "cmc50_kof2000n", "cmc50_kof2001", "cmc50_jockeygp":
 				return true
 			default:
 				return false
@@ -251,7 +264,7 @@ var mameGames = map[string]struct {
 {{- else }}
 					[]mameROM{
 {{- range .ROM }}
-{{- if ne .Status "nodump" }}
+{{- if and (ne .Status "nodump") (ne .Name "") }}
 						{
 							"{{ .Name }}",
 							{{ .Size }},
