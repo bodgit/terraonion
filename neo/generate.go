@@ -52,27 +52,37 @@ func (s software) Reader() string {
 		"3countb":    "kotm2",
 		"alpham2p":   "kotm2p",
 		"aof":        "kotm2",
+		"bangbead":   "bangbead",
 		"burningfp":  "kotm2p",
 		"burningfpa": "kotm2p",
 		"dragonsh":   "dragonsh",
 		"fatfury2":   "kotm2",
 		"fightfeva":  "fightfeva",
+		"ganryu":     "ganryu",
 		"gpilotsp":   "gpilotsp",
 		"kof95a":     "kof95a",
+		"kof99ka":    "kof99ka",
 		"kotm2":      "kotm2",
 		"kotm2a":     "kotm2",
 		"kotm2p":     "kotm2p",
 		"lresortp":   "kotm2p",
+		"mslug3h":    "mslug3h",
+		"nitd":       "nitd",
 		"pbobblen":   "kof95a",
 		"pbobblenb":  "pbobblenb",
+		"preisle2":   "preisle2",
+		"s1945p":     "s1945p",
 		"samsho3":    "kof95a",
 		"sengoku2":   "kotm2",
+		"sengoku3":   "sengoku3",
+		"sengoku3a":  "sengoku3",
 		"ssideki":    "viewpoin",
 		"viewpoin":   "viewpoin",
 		"viewpoinp":  "gpilotsp",
 		"wh1":        "kotm2",
 		"wh1h":       "kotm2",
 		"wh1ha":      "kotm2",
+		"zupapa":     "zupapa",
 	}
 
 	if reader, ok := readers[s.Name]; ok {
@@ -105,6 +115,8 @@ func (s software) IsSupportedSlot() bool {
 			switch f.Value {
 			case "rom_fatfur2":
 				fallthrough
+			case "cmc42_bangbead", "cmc42_ganryu", "cmc42_kof99k", "cmc42_mslug3h", "cmc42_nitd", "cmc42_preisle2", "cmc42_s1945p", "cmc42_sengoku3", "cmc42_zupapa":
+				return true
 			default:
 				return false
 			}
