@@ -4,6 +4,7 @@ package neo
 
 import (
 	"bytes"
+	"encoding/binary"
 	"io"
 	"io/ioutil"
 	"regexp"
@@ -21,8 +22,9 @@ const (
 const (
 	bangbeadGfxKey = 0xf8
 	ganryuGfxKey   = 0x07
-	kof99kaGfxKey  = 0x00
-	mslug3hGfxKey  = 0xad
+	garouGfxKey    = 0x06
+	kof99GfxKey    = 0x00
+	mslug3GfxKey   = 0xad
 	nitdGfxKey     = 0xff
 	preisle2GfxKey = 0x9f
 	s1945pGfxKey   = 0x05
@@ -32,7 +34,7 @@ const (
 
 // CMC50 XOR keys
 const (
-	kof2000nGfxKey = 0x00
+	kof2000GfxKey  = 0x00
 	kof2001GfxKey  = 0x1e
 	jockeygpGfxKey = 0xac
 )
@@ -65,6 +67,14 @@ type mameGame struct {
 
 type gameReader interface {
 	read(*File, mameGame, [][]io.Reader) error
+}
+
+func uint16SliceToBytes(rom []uint16) []byte {
+	b := make([]byte, len(rom)*2)
+	for i, x := range rom {
+		binary.LittleEndian.PutUint16(b[i*2:(i+1)*2], x)
+	}
+	return b
 }
 
 func commonPReader(a mameArea, readers []io.Reader, re *regexp.Regexp) ([]byte, error) {
@@ -112,6 +122,20 @@ func commonPReader(a mameArea, readers []io.Reader, re *regexp.Regexp) ([]byte, 
 	}
 
 	return ioutil.ReadAll(io.MultiReader(bytes.NewReader(patch), reader))
+}
+
+func smaPReader(a mameArea, readers []io.Reader) ([]uint16, error) {
+	b, err := ioutil.ReadAll(io.MultiReader(append([]io.Reader{bytes.NewBuffer(bytes.Repeat([]byte{0x00}, 0xc0000))}, readers...)...))
+	if err != nil {
+		return nil, err
+	}
+
+	rom := make([]uint16, len(b)/2)
+	for i := range rom {
+		rom[i] = binary.LittleEndian.Uint16(b[i*2 : (i+1)*2])
+	}
+
+	return rom, nil
 }
 
 func commonCReader(a mameArea, readers []io.Reader) ([]byte, error) {
@@ -295,6 +319,102 @@ func (ganryu) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, ganryuGfxKey)
 }
 
+// garou uses SMA and CMC42 encryption
+type garou struct{}
+
+func (garou) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			rom, err := smaPReader(g.area[P], readers[P])
+			if err != nil {
+				return err
+			}
+
+			for i := 0; i < 0x800000/2; i++ {
+				rom[i+0x080000] = bitswapUint16(rom[i+0x080000], 13, 12, 14, 10, 8, 2, 3, 1, 5, 9, 11, 4, 15, 0, 6, 7)
+			}
+
+			for i := 0; i < 0xc0000/2; i++ {
+				rom[i] = rom[0x710000/2+bitswapInt(i, 23, 22, 21, 20, 19, 18, 4, 5, 16, 14, 7, 9, 6, 13, 17, 15, 3, 1, 2, 12, 11, 8, 10, 0)]
+			}
+
+			for i := 0; i < 0x800000/2; i += 0x8000 / 2 {
+				buf := make([]uint16, 0x8000/2)
+				copy(buf, rom[i+0x080000:])
+				for j := 0; j < 0x8000/2; j++ {
+					rom[i+j+0x080000] = buf[bitswapInt(j, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 9, 4, 8, 3, 13, 6, 2, 7, 0, 12, 1, 11, 10, 5)]
+				}
+			}
+
+			f.ROM[P] = uint16SliceToBytes(rom)
+		case S:
+			break
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc42GfxDecrypt(b, garouGfxKey)
+			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// garouh uses SMA and CMC42 encryption
+type garouh struct{}
+
+func (garouh) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			rom, err := smaPReader(g.area[P], readers[P])
+			if err != nil {
+				return err
+			}
+
+			for i := 0; i < 0x800000/2; i++ {
+				rom[i+0x080000] = bitswapUint16(rom[i+0x080000], 14, 5, 1, 11, 7, 4, 10, 15, 3, 12, 8, 13, 0, 2, 9, 6)
+			}
+
+			for i := 0; i < 0xc0000/2; i++ {
+				rom[i] = rom[0x7f8000/2+bitswapInt(i, 23, 22, 21, 20, 19, 18, 5, 16, 11, 2, 6, 7, 17, 3, 12, 8, 14, 4, 0, 9, 1, 10, 15, 13)]
+			}
+
+			for i := 0; i < 0x800000/2; i += 0x8000 / 2 {
+				buf := make([]uint16, 0x8000/2)
+				copy(buf, rom[i+0x080000:])
+				for j := 0; j < 0x8000/2; j++ {
+					rom[i+j+0x080000] = buf[bitswapInt(j, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 12, 8, 1, 7, 11, 3, 13, 10, 6, 9, 5, 4, 0, 2)]
+				}
+			}
+
+			f.ROM[P] = uint16SliceToBytes(rom)
+		case S:
+			break
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc42GfxDecrypt(b, garouGfxKey)
+			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 func gpilotspPReader(a mameArea, readers []io.Reader) ([]byte, error) {
 	var intermediates []io.Reader
 
@@ -332,11 +452,65 @@ func (gpilotsp) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// kof2000 uses SMA and CMC50 encryption
+type kof2000 struct{}
+
+func (kof2000) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			rom, err := smaPReader(g.area[P], readers[P])
+			if err != nil {
+				return err
+			}
+
+			for i := 0; i < 0x800000/2; i++ {
+				rom[i+0x080000] = bitswapUint16(rom[i+0x080000], 12, 8, 11, 3, 15, 14, 7, 0, 10, 13, 6, 5, 9, 2, 1, 4)
+			}
+
+			for i := 0; i < 0x63a000/2; i += 0x800 / 2 {
+				buf := make([]uint16, 0x800/2)
+				copy(buf, rom[i+0x080000:])
+				for j := 0; j < 0x800/2; j++ {
+					rom[i+j+0x080000] = buf[bitswapInt(j, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 4, 1, 3, 8, 6, 2, 7, 0, 9, 5)]
+				}
+			}
+
+			for i := 0; i < 0xc0000/2; i++ {
+				rom[i] = rom[0x73a000/2+bitswapInt(i, 23, 22, 21, 20, 19, 18, 8, 4, 15, 13, 3, 14, 16, 2, 6, 17, 7, 12, 10, 0, 5, 11, 1, 9)]
+			}
+
+			f.ROM[P] = uint16SliceToBytes(rom)
+		case S:
+			break
+		case M:
+			b, err := commonPaddedReader(g.area[M], readers[M])
+			if err != nil {
+				return err
+			}
+			f.ROM[M] = cmc50M1Decrypt(b)
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc50GfxDecrypt(b, kof2000GfxKey)
+			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // kof2000n uses CMC50 encryption
 type kof2000n struct{}
 
 func (kof2000n) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC50Reader(f, g, readers, kof2000nGfxKey)
+	return commonCMC50Reader(f, g, readers, kof2000GfxKey)
 }
 
 // kof2001 uses CMC50 encryption
@@ -370,11 +544,59 @@ func (kof95a) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// kof99 uses SMA and CMC42 encryption
+type kof99 struct{}
+
+func (kof99) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			rom, err := smaPReader(g.area[P], readers[P])
+			if err != nil {
+				return err
+			}
+
+			for i := 0; i < 0x800000/2; i++ {
+				rom[i+0x080000] = bitswapUint16(rom[i+0x080000], 13, 7, 3, 0, 9, 4, 5, 6, 1, 12, 8, 14, 10, 11, 2, 15)
+			}
+
+			for i := 0; i < 0x600000/2; i += 0x800 / 2 {
+				buf := make([]uint16, 0x800/2)
+				copy(buf, rom[i+0x080000:])
+				for j := 0; j < 0x800/2; j++ {
+					rom[i+j+0x080000] = buf[bitswapInt(j, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 6, 2, 4, 9, 8, 3, 1, 7, 0, 5)]
+				}
+			}
+
+			for i := 0; i < 0xc0000/2; i++ {
+				rom[i] = rom[0x700000/2+bitswapInt(i, 23, 22, 21, 20, 19, 18, 11, 6, 14, 17, 16, 5, 8, 10, 12, 0, 4, 3, 2, 7, 9, 15, 13, 1)]
+			}
+
+			f.ROM[P] = uint16SliceToBytes(rom)
+		case S:
+			break
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc42GfxDecrypt(b, kof99GfxKey)
+			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // kof99ka uses CMC42 encryption
 type kof99ka struct{}
 
 func (kof99ka) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, kof99kaGfxKey)
+	return commonCMC42Reader(f, g, readers, kof99GfxKey)
 }
 
 func kotm2CReader(a mameArea, readers []io.Reader) ([]byte, error) {
@@ -477,11 +699,107 @@ func (jockeygp) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC50Reader(f, g, readers, jockeygpGfxKey)
 }
 
+// mslug3 uses SMA and CMC42 encryption
+type mslug3 struct{}
+
+func (mslug3) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			rom, err := smaPReader(g.area[P], readers[P])
+			if err != nil {
+				return err
+			}
+
+			for i := 0; i < 0x800000/2; i++ {
+				rom[i+0x080000] = bitswapUint16(rom[i+0x080000], 4, 11, 14, 3, 1, 13, 0, 7, 2, 8, 12, 15, 10, 9, 5, 6)
+			}
+
+			for i := 0; i < 0xc0000/2; i++ {
+				rom[i] = rom[0x5d0000/2+bitswapInt(i, 23, 22, 21, 20, 19, 18, 15, 2, 1, 13, 3, 0, 9, 6, 16, 4, 11, 5, 7, 12, 17, 14, 10, 8)]
+			}
+
+			for i := 0; i < 0x800000/2; i += 0x10000 / 2 {
+				buf := make([]uint16, 0x10000/2)
+				copy(buf, rom[i+0x080000:])
+				for j := 0; j < 0x10000/2; j++ {
+					rom[i+j+0x080000] = buf[bitswapInt(j, 23, 22, 21, 20, 19, 18, 17, 16, 15, 2, 11, 0, 14, 6, 4, 13, 8, 9, 3, 10, 7, 5, 12, 1)]
+				}
+			}
+
+			f.ROM[P] = uint16SliceToBytes(rom)
+		case S:
+			break
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc42GfxDecrypt(b, mslug3GfxKey)
+			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// mslug3a uses SMA and CMC42 encryption
+type mslug3a struct{}
+
+func (mslug3a) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			rom, err := smaPReader(g.area[P], readers[P])
+			if err != nil {
+				return err
+			}
+
+			for i := 0; i < 0x800000/2; i++ {
+				rom[i+0x080000] = bitswapUint16(rom[i+0x080000], 2, 11, 12, 14, 9, 3, 1, 4, 13, 7, 6, 8, 10, 15, 0, 5)
+			}
+
+			for i := 0; i < 0xc0000/2; i++ {
+				rom[i] = rom[0x5d0000/2+bitswapInt(i, 23, 22, 21, 20, 19, 18, 1, 16, 14, 7, 17, 5, 8, 4, 15, 6, 3, 2, 0, 13, 10, 12, 9, 11)]
+			}
+
+			for i := 0; i < 0x800000/2; i += 0x10000 / 2 {
+				buf := make([]uint16, 0x10000/2)
+				copy(buf, rom[i+0x080000:])
+				for j := 0; j < 0x10000/2; j++ {
+					rom[i+j+0x080000] = buf[bitswapInt(j, 23, 22, 21, 20, 19, 18, 17, 16, 15, 12, 0, 11, 3, 4, 13, 6, 8, 14, 7, 5, 2, 10, 9, 1)]
+				}
+			}
+
+			f.ROM[P] = uint16SliceToBytes(rom)
+		case S:
+			break
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc42GfxDecrypt(b, mslug3GfxKey)
+			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // mslug3h uses CMC42 encryption
 type mslug3h struct{}
 
 func (mslug3h) read(f *File, g mameGame, readers [][]io.Reader) error {
-	return commonCMC42Reader(f, g, readers, mslug3hGfxKey)
+	return commonCMC42Reader(f, g, readers, mslug3GfxKey)
 }
 
 // nitd uses CMC42 encryption

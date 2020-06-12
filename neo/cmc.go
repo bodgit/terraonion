@@ -411,16 +411,6 @@ func cmcSfixDecrypt(gfx []byte, size int) []byte {
 	return sfix
 }
 
-func bitswapUint16(n uint16, bits ...int) (result int) {
-	for _, b := range bits {
-		result <<= 1
-		if n&(1<<b) > 0 {
-			result |= 1
-		}
-	}
-	return
-}
-
 func m1AddressScramble(address int, key uint16) int {
 	m1Address8to15Xor := [256]byte{
 		0x0a, 0x72, 0xb7, 0xaf, 0x67, 0xde, 0x1d, 0xb1, 0x78, 0xc4, 0x4f, 0xb5, 0x4b, 0x18, 0x76, 0xdd,
@@ -474,11 +464,11 @@ func m1AddressScramble(address int, key uint16) int {
 
 	block, aux := (address>>16)&0x7, address&0xffff
 
-	aux ^= bitswapUint16(key, 12, 0, 2, 4, 8, 15, 7, 13, 10, 1, 3, 6, 11, 9, 14, 5)
-	aux = bitswapUint16(uint16(aux), p1[block][:]...)
+	aux ^= int(bitswapUint16(key, 12, 0, 2, 4, 8, 15, 7, 13, 10, 1, 3, 6, 11, 9, 14, 5))
+	aux = int(bitswapUint16(uint16(aux), p1[block][:]...))
 	aux ^= int(m1Address0to7Xor[(aux>>8)&0xff])
 	aux ^= int(m1Address8to15Xor[aux&0xff]) << 8
-	aux = bitswapUint16(uint16(aux), 7, 15, 14, 6, 5, 13, 12, 4, 11, 3, 10, 2, 9, 1, 8, 0)
+	aux = int(bitswapUint16(uint16(aux), 7, 15, 14, 6, 5, 13, 12, 4, 11, 3, 10, 2, 9, 1, 8, 0))
 
 	return (block << 16) | aux
 }

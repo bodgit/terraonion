@@ -59,11 +59,19 @@ func (s software) Reader() string {
 		"fatfury2":   "kotm2",
 		"fightfeva":  "fightfeva",
 		"ganryu":     "ganryu",
+		"garou":      "garou",
+		"garouh":     "garouh",
+		"garouha":    "garou",
 		"gpilotsp":   "gpilotsp",
+		"kof2000":    "kof2000",
 		"kof2000n":   "kof2000n",
 		"kof2001":    "kof2001",
 		"kof2001h":   "kof2001",
 		"kof95a":     "kof95a",
+		"kof99":      "kof99",
+		"kof99e":     "kof99",
+		"kof99h":     "kof99",
+		"kof99k":     "kof99",
 		"kof99ka":    "kof99ka",
 		"kotm2":      "kotm2",
 		"kotm2a":     "kotm2",
@@ -71,6 +79,8 @@ func (s software) Reader() string {
 		"jockeygp":   "jockeygp",
 		"jockeygpa":  "jockeygp",
 		"lresortp":   "kotm2p",
+		"mslug3":     "mslug3",
+		"mslug3a":    "mslug3a",
 		"mslug3h":    "mslug3h",
 		"mslugx":     "kof95a",
 		"nitd":       "nitd",
@@ -130,6 +140,8 @@ func (s software) IsSupportedSlot() bool {
 			case "cmc42_bangbead", "cmc42_ganryu", "cmc42_kof99k", "cmc42_mslug3h", "cmc42_nitd", "cmc42_preisle2", "cmc42_s1945p", "cmc42_sengoku3", "cmc42_zupapa":
 				fallthrough
 			case "cmc50_kof2000n", "cmc50_kof2001", "cmc50_jockeygp":
+				fallthrough
+			case "sma_garou", "sma_garouh", "sma_kof2k", "sma_kof99", "sma_mslug3", "sma_mslug3a":
 				return true
 			default:
 				return false
@@ -355,6 +367,7 @@ var mameExtraInformation = map[string]struct {
 	"ganryu":     {37, "Action"},
 	"garou":      {38, "Fighting"},
 	"garouh":     {38, "Fighting"},
+	"garouha":    {38, "Fighting"},
 	"garoup":     {38, "Fighting"},
 	"garoubl":    {38, "Fighting"},
 	"ghostlop":   {39, "Puzzle"},
@@ -448,6 +461,7 @@ var mameExtraInformation = map[string]struct {
 	"mslug2":     {100, "Action"},
 	"mslug2t":    {100, "Action"}, // TODO
 	"mslug3":     {101, "Action"},
+	"mslug3a":    {101, "Action"},
 	"mslug3h":    {101, "Action"},
 	"mslug3b6":   {102, "Action"},
 	"mslug4":     {103, "Action"},
