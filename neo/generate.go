@@ -72,6 +72,7 @@ func (s software) Reader() string {
 		"jockeygpa":  "jockeygp",
 		"lresortp":   "kotm2p",
 		"mslug3h":    "mslug3h",
+		"mslugx":     "kof95a",
 		"nitd":       "nitd",
 		"pbobblen":   "kof95a",
 		"pbobblenb":  "pbobblenb",
@@ -124,7 +125,7 @@ func (s software) IsSupportedSlot() bool {
 	for _, f := range s.Feature {
 		if f.Name == featureSlot {
 			switch f.Value {
-			case "rom_fatfur2":
+			case "rom_fatfur2", "rom_mslugx":
 				fallthrough
 			case "cmc42_bangbead", "cmc42_ganryu", "cmc42_kof99k", "cmc42_mslug3h", "cmc42_nitd", "cmc42_preisle2", "cmc42_s1945p", "cmc42_sengoku3", "cmc42_zupapa":
 				fallthrough
