@@ -79,14 +79,21 @@ func (s software) Reader() string {
 		"jockeygp":   "jockeygp",
 		"jockeygpa":  "jockeygp",
 		"lresortp":   "kotm2p",
+		"ms4plus":    "ms4plus",
 		"mslug3":     "mslug3",
 		"mslug3a":    "mslug3a",
 		"mslug3h":    "mslug3h",
+		"mslug4":     "mslug4",
+		"mslug4h":    "mslug4",
 		"mslugx":     "kof95a",
 		"nitd":       "nitd",
 		"pbobblen":   "kof95a",
 		"pbobblenb":  "pbobblenb",
+		"pnyaa":      "pnyaa",
+		"pnyaaa":     "pnyaa",
 		"preisle2":   "preisle2",
+		"rotd":       "rotd",
+		"rotdh":      "rotd",
 		"s1945p":     "s1945p",
 		"samsho3":    "kof95a",
 		"sengoku2":   "kotm2",
@@ -140,6 +147,8 @@ func (s software) IsSupportedSlot() bool {
 			case "cmc42_bangbead", "cmc42_ganryu", "cmc42_kof99k", "cmc42_mslug3h", "cmc42_nitd", "cmc42_preisle2", "cmc42_s1945p", "cmc42_sengoku3", "cmc42_zupapa":
 				fallthrough
 			case "cmc50_kof2000n", "cmc50_kof2001", "cmc50_jockeygp":
+				fallthrough
+			case "pcm2_ms4p", "pcm2_mslug4", "pcm2_pnyaa", "pcm2_rotd":
 				fallthrough
 			case "sma_garou", "sma_garouh", "sma_kof2k", "sma_kof99", "sma_mslug3", "sma_mslug3a":
 				return true
@@ -489,6 +498,7 @@ var mameExtraInformation = map[string]struct {
 	"pbobblenb":  {120, "Puzzle"},
 	"pgoal":      {121, "Sports"},
 	"pnyaa":      {122, "Other"}, // TODO
+	"pnyaaa":     {122, "Other"}, // TODO
 	"popbounc":   {123, "Puzzle"},
 	"preisle2":   {124, "Shooter"},
 	"pspikes2":   {125, "Sports"},

@@ -37,6 +37,9 @@ const (
 	kof2000GfxKey  = 0x00
 	kof2001GfxKey  = 0x1e
 	jockeygpGfxKey = 0xac
+	mslug4GfxKey   = 0x31
+	pnyaaGfxKey    = 0x2e
+	rotdGfxKey     = 0x3f
 )
 
 type mameROM struct {
@@ -219,6 +222,51 @@ func commonCMC50Reader(f *File, g mameGame, readers [][]io.Reader, xor int) erro
 			}
 			f.ROM[C] = cmc50GfxDecrypt(b, xor)
 			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func commonPCM2Reader(f *File, g mameGame, readers [][]io.Reader, xor int, decryptSfix bool, value int) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			if f.ROM[P], err = commonPReader(g.area[P], readers[P], regexp.MustCompile(`\.ep`)); err != nil {
+				return err
+			}
+		case S:
+			if decryptSfix {
+				break
+			}
+			if f.ROM[S], err = commonPaddedReader(g.area[S], readers[S]); err != nil {
+				return err
+			}
+		case M:
+			b, err := commonPaddedReader(g.area[M], readers[M])
+			if err != nil {
+				return err
+			}
+			f.ROM[M] = cmc50M1Decrypt(b)
+		case V1:
+			b, err := commonPaddedReader(g.area[V1], readers[V1])
+			if err != nil {
+				return err
+			}
+			f.ROM[V1] = pcm2Decrypt(b, value)
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc50GfxDecrypt(b, xor)
+			if decryptSfix {
+				f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+			}
 		default:
 			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
 				return err
@@ -802,6 +850,20 @@ func (mslug3h) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, mslug3GfxKey)
 }
 
+// ms4plus uses PCM2 and CMC50 encryption but doesn't decrypt the S area
+type ms4plus struct{}
+
+func (ms4plus) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonPCM2Reader(f, g, readers, mslug4GfxKey, false, 8)
+}
+
+// mslug4 uses PCM2 and CMC50 encryption
+type mslug4 struct{}
+
+func (mslug4) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonPCM2Reader(f, g, readers, mslug4GfxKey, true, 8)
+}
+
 // nitd uses CMC42 encryption
 type nitd struct{}
 
@@ -839,11 +901,25 @@ func (pbobblenb) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// pnyaa uses PCM2 and CMC50 encryption
+type pnyaa struct{}
+
+func (pnyaa) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonPCM2Reader(f, g, readers, pnyaaGfxKey, true, 4)
+}
+
 // preisle2 uses CMC42 encryption
 type preisle2 struct{}
 
 func (preisle2) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, preisle2GfxKey)
+}
+
+// rotd uses PCM2 and CMC50 encryption
+type rotd struct{}
+
+func (rotd) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonPCM2Reader(f, g, readers, rotdGfxKey, true, 16)
 }
 
 // s1945p uses CMC42 encryption
