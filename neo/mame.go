@@ -794,6 +794,63 @@ func (kof97oro) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// kof98 has its own P encryption
+type kof98 struct{}
+
+func (kof98) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			b, err := ioutil.ReadAll(io.MultiReader(readers[P]...))
+			if err != nil {
+				return err
+			}
+
+			sec := []int{0x000000, 0x100000, 0x000004, 0x100004, 0x10000a, 0x00000a, 0x10000e, 0x00000e}
+			pos := []int{0x000, 0x004, 0x00a, 0x00e}
+
+			dst := make([]byte, 0x200000)
+			copy(dst, b)
+			for i := 0x800; i < 0x100000; i += 0x200 {
+				for j := 0; j < 0x100; j += 0x10 {
+					for k := 0; k < 16; k += 2 {
+						copy(b[i+j+k:i+j+k+2], dst[i+j+sec[k/2]+0x100:])
+						copy(b[i+j+k+0x100:i+j+k+0x102], dst[i+j+sec[k/2]:])
+					}
+					if i >= 0x080000 && i < 0x0c0000 {
+						for k := 0; k < 4; k++ {
+							copy(b[i+j+pos[k]:i+j+pos[k]+2], dst[i+j+pos[k]:])
+							copy(b[i+j+pos[k]+0x100:i+j+pos[k]+0x102], dst[i+j+pos[k]+0x100:])
+						}
+					} else if i >= 0x0c0000 {
+						for k := 0; k < 4; k++ {
+							copy(b[i+j+pos[k]:i+j+pos[k]+2], dst[i+j+pos[k]+0x100:])
+							copy(b[i+j+pos[k]+0x100:i+j+pos[k]+0x102], dst[i+j+pos[k]:])
+						}
+					}
+				}
+				copy(b[i+0x000000:], dst[i+0x000000:i+0x000000+2])
+				copy(b[i+0x000002:], dst[i+0x100000:i+0x100000+2])
+				copy(b[i+0x000100:], dst[i+0x000100:i+0x000100+2])
+				copy(b[i+0x000102:], dst[i+0x100100:i+0x100100+2])
+			}
+			copy(b[0x100000:0x500000], b[0x200000:])
+
+			f.ROM[P] = b
+		case C:
+			if f.ROM[C], err = commonCReader(g.area[C], readers[C]); err != nil {
+				return err
+			}
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // kof99 uses SMA and CMC42 encryption
 type kof99 struct{}
 

@@ -74,6 +74,10 @@ func (s software) Reader() string {
 		"kof2003h":   "kof2003h",
 		"kof95a":     "kof95a",
 		"kof97oro":   "kof97oro",
+		"kof98":      "kof98",
+		"kof98a":     "kof98",
+		"kof98k":     "kof98",
+		"kof98ka":    "kof98",
 		"kof99":      "kof99",
 		"kof99e":     "kof99",
 		"kof99h":     "kof99",
@@ -155,7 +159,7 @@ func (s software) IsSupportedSlot() bool {
 			switch f.Value {
 			case "boot_garoubl", "boot_kf10th", "boot_kof97oro", "boot_ms5plus", "boot_mslug3b6":
 				fallthrough
-			case "rom_fatfur2", "rom_mslugx":
+			case "rom_fatfur2", "rom_kof98", "rom_mslugx":
 				fallthrough
 			case "cmc42_bangbead", "cmc42_ganryu", "cmc42_kof99k", "cmc42_mslug3h", "cmc42_nitd", "cmc42_preisle2", "cmc42_s1945p", "cmc42_sengoku3", "cmc42_zupapa":
 				fallthrough
