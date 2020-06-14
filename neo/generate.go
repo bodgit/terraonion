@@ -60,6 +60,7 @@ func (s software) Reader() string {
 		"fightfeva":  "fightfeva",
 		"ganryu":     "ganryu",
 		"garou":      "garou",
+		"garoubl":    "garoubl",
 		"garouh":     "garouh",
 		"garouha":    "garou",
 		"gpilotsp":   "gpilotsp",
@@ -151,7 +152,7 @@ func (s software) IsSupportedSlot() bool {
 	for _, f := range s.Feature {
 		if f.Name == featureSlot {
 			switch f.Value {
-			case "boot_kf10th", "boot_ms5plus", "boot_mslug3b6":
+			case "boot_garoubl", "boot_kf10th", "boot_ms5plus", "boot_mslug3b6":
 				fallthrough
 			case "rom_fatfur2", "rom_mslugx":
 				fallthrough

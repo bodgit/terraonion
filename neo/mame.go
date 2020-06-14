@@ -518,6 +518,38 @@ func (garou) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// garoubl uses its own S and C encryption
+type garoubl struct{}
+
+func (garoubl) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			if f.ROM[P], err = commonPReader(g.area[P], readers[P], regexp.MustCompile(`\.ep`)); err != nil {
+				return err
+			}
+		case S:
+			b, err := commonPaddedReader(g.area[S], readers[S])
+			if err != nil {
+				return err
+			}
+			f.ROM[S] = sxDecrypt(b, 2)
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cxDecrypt(b)
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // garouh uses SMA and CMC42 encryption
 type garouh struct{}
 

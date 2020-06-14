@@ -22005,6 +22005,108 @@ var mameGames = map[string]struct {
 		Fighting,
 		73,
 	},
+	"garoubl": {
+		mameGame{
+			"garou",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"garou-p1.bin",
+							1048576,
+							[]byte{0xfd, 0x44, 0x6d, 0x59},
+						},
+						{
+							"garou-p2.bin",
+							4194304,
+							[]byte{0x3f, 0xb1, 0x0a, 0x84},
+						},
+					},
+				},
+				{
+					262144,
+					[]mameROM{
+						{
+							"garou-s1.bin",
+							131072,
+							[]byte{0xdf, 0x72, 0x0e, 0x33},
+						},
+					},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"garou-m1.bin",
+							524288,
+							[]byte{0x7c, 0x51, 0xd0, 0x02},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"garou-v1.bin",
+							4194304,
+							[]byte{0x98, 0xd7, 0x36, 0xe4},
+						},
+						{
+							"garou-v2.bin",
+							4194304,
+							[]byte{0xeb, 0x43, 0xc0, 0x3f},
+						},
+						{
+							"garou-v3.bin",
+							4194304,
+							[]byte{0x10, 0xa0, 0xf8, 0x14},
+						},
+						{
+							"garou-v4.bin",
+							4194304,
+							[]byte{0x89, 0x18, 0xfd, 0xd3},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"garou-c1.bin",
+							16777216,
+							[]byte{0xe2, 0xac, 0x83, 0xfa},
+						},
+						{
+							"garou-c2.bin",
+							16777216,
+							[]byte{0x7c, 0x34, 0x4b, 0x24},
+						},
+						{
+							"garou-c3.bin",
+							16777216,
+							[]byte{0xd3, 0xae, 0xc5, 0xa6},
+						},
+						{
+							"garou-c4.bin",
+							16777216,
+							[]byte{0xe0, 0x2a, 0x24, 0x2d},
+						},
+					},
+				},
+			},
+		},
+		garoubl{},
+		"Garou - Mark of the Wolves (bootleg)",
+		1999,
+		"bootleg",
+		Fighting,
+		38,
+	},
 	"mslug3b6": {
 		mameGame{
 			"mslug3",
