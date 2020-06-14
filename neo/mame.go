@@ -372,6 +372,13 @@ func commonPVCReader(f *File, g mameGame, readers [][]io.Reader, xor1, xor2 [0x2
 	return nil
 }
 
+// unsupported explicitly errors
+type unsupported struct{}
+
+func (unsupported) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return errUnsupported
+}
+
 // common handles the majority of games
 type common struct{}
 

@@ -22194,6 +22194,147 @@ var mameGames = map[string]struct {
 		Action,
 		97,
 	},
+	"kof10th": {
+		mameGame{
+			"kof2002",
+			[...]mameArea{
+				{
+					9437184,
+					[]mameROM{
+						{
+							"kf10-p1.bin",
+							8388608,
+							[]byte{0xb1, 0xfd, 0x0c, 0x43},
+						},
+					},
+				},
+				{
+					262144,
+					[]mameROM{},
+				},
+				{
+					131072,
+					[]mameROM{
+						{
+							"kf10-m1.bin",
+							131072,
+							[]byte{0xf6, 0xfa, 0xb8, 0x59},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"kf10-v1.bin",
+							8388608,
+							[]byte{0x0f, 0xc9, 0xa5, 0x8d},
+						},
+						{
+							"kf10-v2.bin",
+							8388608,
+							[]byte{0xb8, 0xc4, 0x75, 0xa4},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"kf10-c1a.bin",
+							4194304,
+							[]byte{0x3b, 0xbc, 0x03, 0x64},
+						},
+						{
+							"kf10-c2a.bin",
+							4194304,
+							[]byte{0x91, 0x23, 0x00, 0x75},
+						},
+						{
+							"kf10-c1b.bin",
+							4194304,
+							[]byte{0xb5, 0xab, 0xfc, 0x28},
+						},
+						{
+							"kf10-c2b.bin",
+							4194304,
+							[]byte{0x6c, 0xc4, 0xc6, 0xe1},
+						},
+						{
+							"kf10-c3a.bin",
+							4194304,
+							[]byte{0x5b, 0x3d, 0x4a, 0x16},
+						},
+						{
+							"kf10-c4a.bin",
+							4194304,
+							[]byte{0xc6, 0xf3, 0x41, 0x9b},
+						},
+						{
+							"kf10-c3b.bin",
+							4194304,
+							[]byte{0x9d, 0x2b, 0xba, 0x19},
+						},
+						{
+							"kf10-c4b.bin",
+							4194304,
+							[]byte{0x5a, 0x40, 0x50, 0xcb},
+						},
+						{
+							"kf10-c5a.bin",
+							4194304,
+							[]byte{0xa2, 0x89, 0xd1, 0xe1},
+						},
+						{
+							"kf10-c6a.bin",
+							4194304,
+							[]byte{0xe6, 0x49, 0x4b, 0x5d},
+						},
+						{
+							"kf10-c5b.bin",
+							4194304,
+							[]byte{0x40, 0x4f, 0xff, 0x02},
+						},
+						{
+							"kf10-c6b.bin",
+							4194304,
+							[]byte{0xf2, 0xcc, 0xfc, 0x9e},
+						},
+						{
+							"kf10-c7a.bin",
+							4194304,
+							[]byte{0xbe, 0x79, 0xc5, 0xa8},
+						},
+						{
+							"kf10-c8a.bin",
+							4194304,
+							[]byte{0xa5, 0x95, 0x2c, 0xa4},
+						},
+						{
+							"kf10-c7b.bin",
+							4194304,
+							[]byte{0x3f, 0xdb, 0x35, 0x42},
+						},
+						{
+							"kf10-c8b.bin",
+							4194304,
+							[]byte{0x66, 0x1b, 0x7a, 0x52},
+						},
+					},
+				},
+			},
+		},
+		unsupported{},
+		"The King of Fighters 10th Anniversary (The King of Fighters 2002 bootleg)",
+		2002,
+		"bootleg",
+		Fighting,
+		62,
+	},
 	"pbobblenb": {
 		mameGame{
 			"pbobblen",

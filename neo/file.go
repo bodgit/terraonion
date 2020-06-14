@@ -40,6 +40,7 @@ var (
 	errUnmatchedROM = errors.New("neo: unable to match ROM")
 	errGameNotFound = errors.New("neo: game not found")
 	errROMNotFound  = errors.New("neo: ROM not found")
+	errUnsupported  = errors.New("neo: unsupported game")
 )
 
 var signature = [3]byte{'N', 'E', 'O'}
