@@ -36,10 +36,13 @@ const (
 const (
 	kof2000GfxKey  = 0x00
 	kof2001GfxKey  = 0x1e
+	kof2003GfxKey  = 0x9d
 	jockeygpGfxKey = 0xac
 	mslug4GfxKey   = 0x31
+	mslug5GfxKey   = 0x19
 	pnyaaGfxKey    = 0x2e
 	rotdGfxKey     = 0x3f
+	svcGfxKey      = 0x57
 )
 
 type mameROM struct {
@@ -267,6 +270,99 @@ func commonPCM2Reader(f *File, g mameGame, readers [][]io.Reader, xor int, decry
 			if decryptSfix {
 				f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
 			}
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func pvcPReader(a mameArea, readers []io.Reader) ([]byte, error) {
+	reader, err := interleaveROM(2, readers[0], readers[1])
+	if err != nil {
+		return nil, err
+	}
+
+	if len(readers) > 2 {
+		reader = io.MultiReader(append([]io.Reader{reader}, readers[2:]...)...)
+	}
+
+	return ioutil.ReadAll(reader)
+}
+
+func commonPVCReader(f *File, g mameGame, readers [][]io.Reader, xor1, xor2 [0x20]byte, bitswap1, bitswap2, bitswap3 []int, xor3, value, xor int) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			b, err := pvcPReader(g.area[P], readers[P])
+			if err != nil {
+				return err
+			}
+
+			// kof2003
+			if len(b) > 0x800000 {
+				for i := 0; i < 0x100000; i++ {
+					b[0x800000+i] ^= b[0x100002|i]
+				}
+			}
+
+			for i := 0; i < 0x100000; i++ {
+				b[i] ^= xor1[i%0x20]
+			}
+
+			for i := 0x100000; i < 0x800000; i++ {
+				b[i] ^= xor2[i%0x20]
+			}
+
+			for i := 0x100000; i < 0x800000; i += 4 {
+				v := uint16(b[i+1]) | uint16(b[i+2])<<8
+				v = bitswapUint16(v, bitswap1...)
+				b[i+1] = byte(v & 0xff)
+				b[i+2] = byte(v >> 8)
+			}
+
+			buf := make([]byte, len(b))
+
+			copy(buf, b)
+			for i := 0; i < 0x100000/0x10000; i++ {
+				off := (i & 0xf0) + bitswapInt(i&0x0f, bitswap2...)
+				copy(b[i*0x10000:], buf[off*0x10000:(off*0x10000)+0x10000])
+			}
+
+			for i := 0x100000; i < len(b); i += 0x100 {
+				off := (i & 0xf000ff) + ((i & 0x000f00) ^ xor3) + (bitswapInt((i&0x0ff000)>>12, bitswap3...) << 12)
+				copy(b[i:], buf[off:(off+0x100)])
+			}
+
+			copy(buf, b)
+			copy(b[0x100000:], buf[len(b)-0x100000:])
+			copy(b[0x200000:], buf[0x100000:len(b)-0x100000])
+
+			f.ROM[P] = b
+		case S:
+			break
+		case M:
+			b, err := commonPaddedReader(g.area[M], readers[M])
+			if err != nil {
+				return err
+			}
+			f.ROM[M] = cmc50M1Decrypt(b)
+		case V1:
+			b, err := commonPaddedReader(g.area[V1], readers[V1])
+			if err != nil {
+				return err
+			}
+			f.ROM[V1] = pcm2Swap(b, value)
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc50GfxDecrypt(b, xor)
+			f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
 		default:
 			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
 				return err
@@ -568,6 +664,20 @@ func (kof2001) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC50Reader(f, g, readers, kof2001GfxKey)
 }
 
+// kof2003 uses PVC, PCM2 and CMC50 encryption
+type kof2003 struct{}
+
+func (kof2003) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonPVCReader(f, g, readers, [0x20]byte{0x3b, 0x6a, 0xf7, 0xb7, 0xe8, 0xa9, 0x20, 0x99, 0x9f, 0x39, 0x34, 0x0c, 0xc3, 0x9a, 0xa5, 0xc8, 0xb8, 0x18, 0xce, 0x56, 0x94, 0x44, 0xe3, 0x7a, 0xf7, 0xdd, 0x42, 0xf0, 0x18, 0x60, 0x92, 0x9f}, [0x20]byte{0x2f, 0x02, 0x60, 0xbb, 0x77, 0x01, 0x30, 0x08, 0xd8, 0x01, 0xa0, 0xdf, 0x37, 0x0a, 0xf0, 0x65, 0x28, 0x03, 0xd0, 0x23, 0xd3, 0x03, 0x70, 0x42, 0xbb, 0x06, 0xf0, 0x28, 0xba, 0x0f, 0xf0, 0x7a}, []int{15, 14, 13, 12, 5, 4, 7, 6, 9, 8, 11, 10, 3, 2, 1, 0}, []int{7, 6, 5, 4, 0, 1, 2, 3}, []int{4, 5, 6, 7, 1, 0, 3, 2}, 0x00800, 5, kof2003GfxKey)
+}
+
+// kof2003h uses PVC, PCM2 and CMC50 encryption
+type kof2003h struct{}
+
+func (kof2003h) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonPVCReader(f, g, readers, [0x20]byte{0xc2, 0x4b, 0x74, 0xfd, 0x0b, 0x34, 0xeb, 0xd7, 0x10, 0x6d, 0xf9, 0xce, 0x5d, 0xd5, 0x61, 0x29, 0xf5, 0xbe, 0x0d, 0x82, 0x72, 0x45, 0x0f, 0x24, 0xb3, 0x34, 0x1b, 0x99, 0xea, 0x09, 0xf3, 0x03}, [0x20]byte{0x2b, 0x09, 0xd0, 0x7f, 0x51, 0x0b, 0x10, 0x4c, 0x5b, 0x07, 0x70, 0x9d, 0x3e, 0x0b, 0xb0, 0xb6, 0x54, 0x09, 0xe0, 0xcc, 0x3d, 0x0d, 0x80, 0x99, 0x87, 0x03, 0x90, 0x82, 0xfe, 0x04, 0x20, 0x18}, []int{15, 14, 13, 12, 10, 11, 8, 9, 6, 7, 4, 5, 3, 2, 1, 0}, []int{7, 6, 5, 4, 1, 0, 3, 2}, []int{6, 7, 4, 5, 0, 1, 2, 3}, 0x00400, 5, kof2003GfxKey)
+}
+
 // kof95a is standard apart from the regular ROMs being named like patch ROMs
 type kof95a struct{}
 
@@ -864,6 +974,13 @@ func (mslug4) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPCM2Reader(f, g, readers, mslug4GfxKey, true, 8)
 }
 
+// mslug5 uses PVC, PCM2 and CMC50 encryption
+type mslug5 struct{}
+
+func (mslug5) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonPVCReader(f, g, readers, [0x20]byte{0xc2, 0x4b, 0x74, 0xfd, 0x0b, 0x34, 0xeb, 0xd7, 0x10, 0x6d, 0xf9, 0xce, 0x5d, 0xd5, 0x61, 0x29, 0xf5, 0xbe, 0x0d, 0x82, 0x72, 0x45, 0x0f, 0x24, 0xb3, 0x34, 0x1b, 0x99, 0xea, 0x09, 0xf3, 0x03}, [0x20]byte{0x36, 0x09, 0xb0, 0x64, 0x95, 0x0f, 0x90, 0x42, 0x6e, 0x0f, 0x30, 0xf6, 0xe5, 0x08, 0x30, 0x64, 0x08, 0x04, 0x00, 0x2f, 0x72, 0x09, 0xa0, 0x13, 0xc9, 0x0b, 0xa0, 0x3e, 0xc2, 0x00, 0x40, 0x2b}, []int{15, 14, 13, 12, 10, 11, 8, 9, 6, 7, 4, 5, 3, 2, 1, 0}, []int{7, 6, 5, 4, 1, 0, 3, 2}, []int{5, 4, 7, 6, 1, 0, 3, 2}, 0x00700, 2, mslug5GfxKey)
+}
+
 // nitd uses CMC42 encryption
 type nitd struct{}
 
@@ -934,6 +1051,13 @@ type sengoku3 struct{}
 
 func (sengoku3) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, sengoku3GfxKey)
+}
+
+// svc uses PVC, PCM2 and CMC50 encryption
+type svc struct{}
+
+func (svc) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonPVCReader(f, g, readers, [0x20]byte{0x3b, 0x6a, 0xf7, 0xb7, 0xe8, 0xa9, 0x20, 0x99, 0x9f, 0x39, 0x34, 0x0c, 0xc3, 0x9a, 0xa5, 0xc8, 0xb8, 0x18, 0xce, 0x56, 0x94, 0x44, 0xe3, 0x7a, 0xf7, 0xdd, 0x42, 0xf0, 0x18, 0x60, 0x92, 0x9f}, [0x20]byte{0x69, 0x0b, 0x60, 0xd6, 0x4f, 0x01, 0x40, 0x1a, 0x9f, 0x0b, 0xf0, 0x75, 0x58, 0x0e, 0x60, 0xb4, 0x14, 0x04, 0x20, 0xe4, 0xb9, 0x0d, 0x10, 0x89, 0xeb, 0x07, 0x30, 0x90, 0x50, 0x0e, 0x20, 0x26}, []int{15, 14, 13, 12, 10, 11, 8, 9, 6, 7, 4, 5, 3, 2, 1, 0}, []int{7, 6, 5, 4, 2, 3, 0, 1}, []int{4, 5, 6, 7, 1, 0, 3, 2}, 0x00a00, 3, svcGfxKey)
 }
 
 func viewpoinCReader(a mameArea, readers []io.Reader) ([]byte, error) {

@@ -67,6 +67,8 @@ func (s software) Reader() string {
 		"kof2000n":   "kof2000n",
 		"kof2001":    "kof2001",
 		"kof2001h":   "kof2001",
+		"kof2003":    "kof2003",
+		"kof2003h":   "kof2003h",
 		"kof95a":     "kof95a",
 		"kof99":      "kof99",
 		"kof99e":     "kof99",
@@ -85,6 +87,8 @@ func (s software) Reader() string {
 		"mslug3h":    "mslug3h",
 		"mslug4":     "mslug4",
 		"mslug4h":    "mslug4",
+		"mslug5":     "mslug5",
+		"mslug5h":    "mslug5",
 		"mslugx":     "kof95a",
 		"nitd":       "nitd",
 		"pbobblen":   "kof95a",
@@ -100,6 +104,7 @@ func (s software) Reader() string {
 		"sengoku3":   "sengoku3",
 		"sengoku3a":  "sengoku3",
 		"ssideki":    "viewpoin",
+		"svc":        "svc",
 		"viewpoin":   "viewpoin",
 		"viewpoinp":  "gpilotsp",
 		"wh1":        "kotm2",
@@ -149,6 +154,8 @@ func (s software) IsSupportedSlot() bool {
 			case "cmc50_kof2000n", "cmc50_kof2001", "cmc50_jockeygp":
 				fallthrough
 			case "pcm2_ms4p", "pcm2_mslug4", "pcm2_pnyaa", "pcm2_rotd":
+				fallthrough
+			case "pvc_kf2k3", "pvc_kf2k3h", "pvc_mslug5", "pvc_svc":
 				fallthrough
 			case "sma_garou", "sma_garouh", "sma_kof2k", "sma_kof99", "sma_mslug3", "sma_mslug3a":
 				return true
