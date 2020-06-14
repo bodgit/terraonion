@@ -64,12 +64,15 @@ func (s software) Reader() string {
 		"garouh":     "garouh",
 		"garouha":    "garou",
 		"gpilotsp":   "gpilotsp",
+		"kf2k2pls":   "kf2k2pls",
+		"kf2k2pla":   "kf2k2pls",
 		"kf2k3pcb":   "unsupported",
 		"kof10th":    "unsupported",
 		"kof2000":    "kof2000",
 		"kof2000n":   "kof2000n",
 		"kof2001":    "kof2001",
 		"kof2001h":   "kof2001",
+		"kof2002":    "kof2002",
 		"kof2003":    "kof2003",
 		"kof2003h":   "kof2003h",
 		"kof95a":     "kof95a",
@@ -89,6 +92,7 @@ func (s software) Reader() string {
 		"jockeygp":   "jockeygp",
 		"jockeygpa":  "jockeygp",
 		"lresortp":   "kotm2p",
+		"matrim":     "matrim",
 		"ms4plus":    "ms4plus",
 		"ms5plus":    "ms5plus",
 		"mslug3":     "mslug3",
@@ -109,7 +113,13 @@ func (s software) Reader() string {
 		"rotd":       "rotd",
 		"rotdh":      "rotd",
 		"s1945p":     "s1945p",
+		"samsh5sp":   "samsh5sp",
+		"samsh5sph":  "samsh5sp",
+		"samsh5spho": "samsh5sp",
 		"samsho3":    "kof95a",
+		"samsho5":    "samsho5",
+		"samsho5a":   "samsho5",
+		"samsho5h":   "samsho5",
 		"sengoku2":   "kotm2",
 		"sengoku3":   "sengoku3",
 		"sengoku3a":  "sengoku3",
@@ -164,6 +174,8 @@ func (s software) IsSupportedSlot() bool {
 			case "cmc42_bangbead", "cmc42_ganryu", "cmc42_kof99k", "cmc42_mslug3h", "cmc42_nitd", "cmc42_preisle2", "cmc42_s1945p", "cmc42_sengoku3", "cmc42_zupapa":
 				fallthrough
 			case "cmc50_kof2000n", "cmc50_kof2001", "cmc50_jockeygp":
+				fallthrough
+			case "k2k2_kf2k2p", "k2k2_kof2k2", "k2k2_matrim", "k2k2_sams5s", "k2k2_samsh5":
 				fallthrough
 			case "pcm2_ms4p", "pcm2_mslug4", "pcm2_pnyaa", "pcm2_rotd":
 				fallthrough
@@ -558,6 +570,7 @@ var mameExtraInformation = map[string]struct {
 	"samsho4":    {143, "Fighting"},
 	"samsho4k":   {143, "Fighting"},
 	"samsho5":    {144, "Fighting"},
+	"samsho5a":   {144, "Fighting"},
 	"samsho5h":   {144, "Fighting"},
 	"samsho5b":   {144, "Fighting"},
 	"savagere":   {145, "Fighting"},

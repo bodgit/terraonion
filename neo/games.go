@@ -21306,6 +21306,218 @@ var mameGames = map[string]struct {
 		Fighting,
 		137,
 	},
+	"kof2002": {
+		mameGame{
+			"",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"265-p1.p1",
+							1048576,
+							[]byte{0x9e, 0xde, 0x73, 0x23},
+						},
+						{
+							"265-p2.sp2",
+							4194304,
+							[]byte{0x32, 0x72, 0x66, 0xb8},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"265-m1.m1",
+							131072,
+							[]byte{0x85, 0xaa, 0xa6, 0x32},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"265-v1.v1",
+							8388608,
+							[]byte{0x15, 0xe8, 0xf3, 0xf5},
+						},
+						{
+							"265-v2.v2",
+							8388608,
+							[]byte{0xda, 0x41, 0xd6, 0xf9},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"265-c1.c1",
+							8388608,
+							[]byte{0x2b, 0x65, 0xa6, 0x56},
+						},
+						{
+							"265-c2.c2",
+							8388608,
+							[]byte{0xad, 0xf1, 0x89, 0x83},
+						},
+						{
+							"265-c3.c3",
+							8388608,
+							[]byte{0x87, 0x5e, 0x9f, 0xd7},
+						},
+						{
+							"265-c4.c4",
+							8388608,
+							[]byte{0x2d, 0xa1, 0x39, 0x47},
+						},
+						{
+							"265-c5.c5",
+							8388608,
+							[]byte{0x61, 0xbd, 0x16, 0x5d},
+						},
+						{
+							"265-c6.c6",
+							8388608,
+							[]byte{0x03, 0xfd, 0xd1, 0xeb},
+						},
+						{
+							"265-c7.c7",
+							8388608,
+							[]byte{0x1a, 0x27, 0x49, 0xd8},
+						},
+						{
+							"265-c8.c8",
+							8388608,
+							[]byte{0xab, 0x0b, 0xb5, 0x49},
+						},
+					},
+				},
+			},
+		},
+		kof2002{},
+		"The King of Fighters 2002 (NGM-2650 ~ NGH-2650)",
+		2002,
+		"Eolith / Playmore",
+		Fighting,
+		65,
+	},
+	"matrim": {
+		mameGame{
+			"",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"266-p1.p1",
+							1048576,
+							[]byte{0x5d, 0x4c, 0x2d, 0xc7},
+						},
+						{
+							"266-p2.sp2",
+							4194304,
+							[]byte{0xa1, 0x4b, 0x19, 0x06},
+						},
+					},
+				},
+				{
+					524288,
+					[]mameROM{},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"266-m1.m1",
+							131072,
+							[]byte{0x45, 0x6c, 0x3e, 0x6c},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"266-v1.v1",
+							8388608,
+							[]byte{0xa4, 0xf8, 0x36, 0x90},
+						},
+						{
+							"266-v2.v2",
+							8388608,
+							[]byte{0xd0, 0xf6, 0x9e, 0xda},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"266-c1.c1",
+							8388608,
+							[]byte{0x50, 0x5f, 0x4e, 0x30},
+						},
+						{
+							"266-c2.c2",
+							8388608,
+							[]byte{0x3c, 0xb5, 0x74, 0x82},
+						},
+						{
+							"266-c3.c3",
+							8388608,
+							[]byte{0xf1, 0xcc, 0x6a, 0xd0},
+						},
+						{
+							"266-c4.c4",
+							8388608,
+							[]byte{0x45, 0xb8, 0x06, 0xb7},
+						},
+						{
+							"266-c5.c5",
+							8388608,
+							[]byte{0x9a, 0x15, 0xdd, 0x6b},
+						},
+						{
+							"266-c6.c6",
+							8388608,
+							[]byte{0x28, 0x1c, 0xb9, 0x39},
+						},
+						{
+							"266-c7.c7",
+							8388608,
+							[]byte{0x4b, 0x71, 0xf7, 0x80},
+						},
+						{
+							"266-c8.c8",
+							8388608,
+							[]byte{0x29, 0x87, 0x3d, 0x33},
+						},
+					},
+				},
+			},
+		},
+		matrim{},
+		"Matrimelee / Shin Gouketsuji Ichizoku Toukon (NGM-2660 ~ NGH-2660)",
+		2002,
+		"Noise Factory / Atlus",
+		Fighting,
+		93,
+	},
 	"pnyaa": {
 		mameGame{
 			"",
@@ -21756,6 +21968,324 @@ var mameGames = map[string]struct {
 		Fighting,
 		165,
 	},
+	"samsho5": {
+		mameGame{
+			"",
+			[...]mameArea{
+				{
+					8388608,
+					[]mameROM{
+						{
+							"270-p1.p1",
+							4194304,
+							[]byte{0x4a, 0x2a, 0x09, 0xe6},
+						},
+						{
+							"270-p2.sp2",
+							4194304,
+							[]byte{0xe0, 0xc7, 0x4c, 0x85},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"270-m1.m1",
+							524288,
+							[]byte{0x49, 0xc9, 0x90, 0x1a},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"270-v1.v1",
+							8388608,
+							[]byte{0x62, 0xe4, 0x34, 0xeb},
+						},
+						{
+							"270-v2.v2",
+							8388608,
+							[]byte{0x18, 0x0f, 0x3c, 0x9a},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"270-c1.c1",
+							8388608,
+							[]byte{0x14, 0xff, 0xff, 0xac},
+						},
+						{
+							"270-c2.c2",
+							8388608,
+							[]byte{0x40, 0x1f, 0x72, 0x99},
+						},
+						{
+							"270-c3.c3",
+							8388608,
+							[]byte{0x83, 0x8f, 0x02, 0x60},
+						},
+						{
+							"270-c4.c4",
+							8388608,
+							[]byte{0x04, 0x15, 0x60, 0xa5},
+						},
+						{
+							"270-c5.c5",
+							8388608,
+							[]byte{0xbd, 0x30, 0xb5, 0x2d},
+						},
+						{
+							"270-c6.c6",
+							8388608,
+							[]byte{0x86, 0xa6, 0x9c, 0x70},
+						},
+						{
+							"270-c7.c7",
+							8388608,
+							[]byte{0xd2, 0x8f, 0xbc, 0x3c},
+						},
+						{
+							"270-c8.c8",
+							8388608,
+							[]byte{0x02, 0xc5, 0x30, 0xa6},
+						},
+					},
+				},
+			},
+		},
+		samsho5{},
+		"Samurai Shodown V / Samurai Spirits Zero (NGM-2700, set 1)",
+		2003,
+		"Yuki Enterprise / SNK Playmore",
+		Fighting,
+		144,
+	},
+	"samsho5a": {
+		mameGame{
+			"samsho5",
+			[...]mameArea{
+				{
+					8388608,
+					[]mameROM{
+						{
+							"p1.bin",
+							4194304,
+							[]byte{0x77, 0x95, 0xff, 0xfe},
+						},
+						{
+							"p2.bin",
+							4194304,
+							[]byte{0x2b, 0x84, 0x4f, 0xe9},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"270-m1.m1",
+							524288,
+							[]byte{0x49, 0xc9, 0x90, 0x1a},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"270-v1.v1",
+							8388608,
+							[]byte{0x62, 0xe4, 0x34, 0xeb},
+						},
+						{
+							"270-v2.v2",
+							8388608,
+							[]byte{0x18, 0x0f, 0x3c, 0x9a},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"270-c1.c1",
+							8388608,
+							[]byte{0x14, 0xff, 0xff, 0xac},
+						},
+						{
+							"270-c2.c2",
+							8388608,
+							[]byte{0x40, 0x1f, 0x72, 0x99},
+						},
+						{
+							"270-c3.c3",
+							8388608,
+							[]byte{0x83, 0x8f, 0x02, 0x60},
+						},
+						{
+							"270-c4.c4",
+							8388608,
+							[]byte{0x04, 0x15, 0x60, 0xa5},
+						},
+						{
+							"270-c5.c5",
+							8388608,
+							[]byte{0xbd, 0x30, 0xb5, 0x2d},
+						},
+						{
+							"270-c6.c6",
+							8388608,
+							[]byte{0x86, 0xa6, 0x9c, 0x70},
+						},
+						{
+							"270-c7.c7",
+							8388608,
+							[]byte{0xd2, 0x8f, 0xbc, 0x3c},
+						},
+						{
+							"270-c8.c8",
+							8388608,
+							[]byte{0x02, 0xc5, 0x30, 0xa6},
+						},
+					},
+				},
+			},
+		},
+		samsho5{},
+		"Samurai Shodown V / Samurai Spirits Zero (NGM-2700, set 2)",
+		2003,
+		"Yuki Enterprise / SNK Playmore",
+		Fighting,
+		144,
+	},
+	"samsho5h": {
+		mameGame{
+			"samsho5",
+			[...]mameArea{
+				{
+					8388608,
+					[]mameROM{
+						{
+							"270-p1c.p1",
+							4194304,
+							[]byte{0xbf, 0x95, 0x60, 0x89},
+						},
+						{
+							"270-p2c.sp2",
+							4194304,
+							[]byte{0x94, 0x3a, 0x6b, 0x1d},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"270-m1.m1",
+							524288,
+							[]byte{0x49, 0xc9, 0x90, 0x1a},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"270-v1.v1",
+							8388608,
+							[]byte{0x62, 0xe4, 0x34, 0xeb},
+						},
+						{
+							"270-v2.v2",
+							8388608,
+							[]byte{0x18, 0x0f, 0x3c, 0x9a},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"270-c1.c1",
+							8388608,
+							[]byte{0x14, 0xff, 0xff, 0xac},
+						},
+						{
+							"270-c2.c2",
+							8388608,
+							[]byte{0x40, 0x1f, 0x72, 0x99},
+						},
+						{
+							"270-c3.c3",
+							8388608,
+							[]byte{0x83, 0x8f, 0x02, 0x60},
+						},
+						{
+							"270-c4.c4",
+							8388608,
+							[]byte{0x04, 0x15, 0x60, 0xa5},
+						},
+						{
+							"270-c5.c5",
+							8388608,
+							[]byte{0xbd, 0x30, 0xb5, 0x2d},
+						},
+						{
+							"270-c6.c6",
+							8388608,
+							[]byte{0x86, 0xa6, 0x9c, 0x70},
+						},
+						{
+							"270-c7.c7",
+							8388608,
+							[]byte{0xd2, 0x8f, 0xbc, 0x3c},
+						},
+						{
+							"270-c8.c8",
+							8388608,
+							[]byte{0x02, 0xc5, 0x30, 0xa6},
+						},
+					},
+				},
+			},
+		},
+		samsho5{},
+		"Samurai Shodown V / Samurai Spirits Zero (NGH-2700)",
+		2003,
+		"Yuki Enterprise / SNK Playmore",
+		Fighting,
+		144,
+	},
 	"kof2003": {
 		mameGame{
 			"",
@@ -21977,6 +22507,324 @@ var mameGames = map[string]struct {
 		"SNK Playmore",
 		Fighting,
 		66,
+	},
+	"samsh5sp": {
+		mameGame{
+			"",
+			[...]mameArea{
+				{
+					8388608,
+					[]mameROM{
+						{
+							"272-p1.p1",
+							4194304,
+							[]byte{0xfb, 0x7a, 0x6b, 0xba},
+						},
+						{
+							"272-p2.sp2",
+							4194304,
+							[]byte{0x63, 0x49, 0x2e, 0xa6},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"272-m1.m1",
+							524288,
+							[]byte{0xad, 0xee, 0xbf, 0x40},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"272-v1.v1",
+							8388608,
+							[]byte{0x76, 0xa9, 0x41, 0x27},
+						},
+						{
+							"272-v2.v2",
+							8388608,
+							[]byte{0x4b, 0xa5, 0x07, 0xf1},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"272-c1.c1",
+							8388608,
+							[]byte{0x4f, 0x97, 0x66, 0x1a},
+						},
+						{
+							"272-c2.c2",
+							8388608,
+							[]byte{0xa3, 0xaf, 0xda, 0x4f},
+						},
+						{
+							"272-c3.c3",
+							8388608,
+							[]byte{0x8c, 0x3c, 0x75, 0x02},
+						},
+						{
+							"272-c4.c4",
+							8388608,
+							[]byte{0x32, 0xd5, 0xe2, 0xe2},
+						},
+						{
+							"272-c5.c5",
+							8388608,
+							[]byte{0x6c, 0xe0, 0x85, 0xbc},
+						},
+						{
+							"272-c6.c6",
+							8388608,
+							[]byte{0x05, 0xc8, 0xdc, 0x8e},
+						},
+						{
+							"272-c7.c7",
+							8388608,
+							[]byte{0x14, 0x17, 0xb7, 0x42},
+						},
+						{
+							"272-c8.c8",
+							8388608,
+							[]byte{0xd4, 0x97, 0x73, 0xcd},
+						},
+					},
+				},
+			},
+		},
+		samsh5sp{},
+		"Samurai Shodown V Special / Samurai Spirits Zero Special (NGM-2720)",
+		2004,
+		"Yuki Enterprise / SNK Playmore",
+		Fighting,
+		139,
+	},
+	"samsh5sph": {
+		mameGame{
+			"samsh5sp",
+			[...]mameArea{
+				{
+					8388608,
+					[]mameROM{
+						{
+							"272-p1ca.p1",
+							4194304,
+							[]byte{0xc3, 0x0a, 0x08, 0xdd},
+						},
+						{
+							"272-p2ca.sp2",
+							4194304,
+							[]byte{0xbd, 0x64, 0xa5, 0x18},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"272-m1.m1",
+							524288,
+							[]byte{0xad, 0xee, 0xbf, 0x40},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"272-v1.v1",
+							8388608,
+							[]byte{0x76, 0xa9, 0x41, 0x27},
+						},
+						{
+							"272-v2.v2",
+							8388608,
+							[]byte{0x4b, 0xa5, 0x07, 0xf1},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"272-c1.c1",
+							8388608,
+							[]byte{0x4f, 0x97, 0x66, 0x1a},
+						},
+						{
+							"272-c2.c2",
+							8388608,
+							[]byte{0xa3, 0xaf, 0xda, 0x4f},
+						},
+						{
+							"272-c3.c3",
+							8388608,
+							[]byte{0x8c, 0x3c, 0x75, 0x02},
+						},
+						{
+							"272-c4.c4",
+							8388608,
+							[]byte{0x32, 0xd5, 0xe2, 0xe2},
+						},
+						{
+							"272-c5.c5",
+							8388608,
+							[]byte{0x6c, 0xe0, 0x85, 0xbc},
+						},
+						{
+							"272-c6.c6",
+							8388608,
+							[]byte{0x05, 0xc8, 0xdc, 0x8e},
+						},
+						{
+							"272-c7.c7",
+							8388608,
+							[]byte{0x14, 0x17, 0xb7, 0x42},
+						},
+						{
+							"272-c8.c8",
+							8388608,
+							[]byte{0xd4, 0x97, 0x73, 0xcd},
+						},
+					},
+				},
+			},
+		},
+		samsh5sp{},
+		"Samurai Shodown V Special / Samurai Spirits Zero Special (NGH-2720, 2nd release, less censored)",
+		2004,
+		"Yuki Enterprise / SNK Playmore",
+		Fighting,
+		139,
+	},
+	"samsh5spho": {
+		mameGame{
+			"samsh5sp",
+			[...]mameArea{
+				{
+					8388608,
+					[]mameROM{
+						{
+							"272-p1c.p1",
+							4194304,
+							[]byte{0x92, 0x91, 0x79, 0x4d},
+						},
+						{
+							"272-p2c.sp2",
+							4194304,
+							[]byte{0xfa, 0x1a, 0x7d, 0xd8},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"272-m1.m1",
+							524288,
+							[]byte{0xad, 0xee, 0xbf, 0x40},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"272-v1.v1",
+							8388608,
+							[]byte{0x76, 0xa9, 0x41, 0x27},
+						},
+						{
+							"272-v2.v2",
+							8388608,
+							[]byte{0x4b, 0xa5, 0x07, 0xf1},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"272-c1.c1",
+							8388608,
+							[]byte{0x4f, 0x97, 0x66, 0x1a},
+						},
+						{
+							"272-c2.c2",
+							8388608,
+							[]byte{0xa3, 0xaf, 0xda, 0x4f},
+						},
+						{
+							"272-c3.c3",
+							8388608,
+							[]byte{0x8c, 0x3c, 0x75, 0x02},
+						},
+						{
+							"272-c4.c4",
+							8388608,
+							[]byte{0x32, 0xd5, 0xe2, 0xe2},
+						},
+						{
+							"272-c5.c5",
+							8388608,
+							[]byte{0x6c, 0xe0, 0x85, 0xbc},
+						},
+						{
+							"272-c6.c6",
+							8388608,
+							[]byte{0x05, 0xc8, 0xdc, 0x8e},
+						},
+						{
+							"272-c7.c7",
+							8388608,
+							[]byte{0x14, 0x17, 0xb7, 0x42},
+						},
+						{
+							"272-c8.c8",
+							8388608,
+							[]byte{0xd4, 0x97, 0x73, 0xcd},
+						},
+					},
+				},
+			},
+		},
+		samsh5sp{},
+		"Samurai Shodown V Special / Samurai Spirits Zero Special (NGH-2720, 1st release, censored)",
+		2004,
+		"Yuki Enterprise / SNK Playmore",
+		Fighting,
+		139,
 	},
 	"jockeygp": {
 		mameGame{
@@ -23022,6 +23870,230 @@ var mameGames = map[string]struct {
 		"bootleg",
 		Action,
 		97,
+	},
+	"kf2k2pls": {
+		mameGame{
+			"kof2002",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"2k2-p1p.bin",
+							1048576,
+							[]byte{0x3a, 0xb0, 0x37, 0x81},
+						},
+						{
+							"265-p2.sp2",
+							4194304,
+							[]byte{0x32, 0x72, 0x66, 0xb8},
+						},
+					},
+				},
+				{
+					262144,
+					[]mameROM{
+						{
+							"2k2-s1p.bin",
+							131072,
+							[]byte{0x59, 0x5e, 0x00, 0x06},
+						},
+					},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"265-m1.m1",
+							131072,
+							[]byte{0x85, 0xaa, 0xa6, 0x32},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"265-v1.v1",
+							8388608,
+							[]byte{0x15, 0xe8, 0xf3, 0xf5},
+						},
+						{
+							"265-v2.v2",
+							8388608,
+							[]byte{0xda, 0x41, 0xd6, 0xf9},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"265-c1.c1",
+							8388608,
+							[]byte{0x2b, 0x65, 0xa6, 0x56},
+						},
+						{
+							"265-c2.c2",
+							8388608,
+							[]byte{0xad, 0xf1, 0x89, 0x83},
+						},
+						{
+							"265-c3.c3",
+							8388608,
+							[]byte{0x87, 0x5e, 0x9f, 0xd7},
+						},
+						{
+							"265-c4.c4",
+							8388608,
+							[]byte{0x2d, 0xa1, 0x39, 0x47},
+						},
+						{
+							"265-c5.c5",
+							8388608,
+							[]byte{0x61, 0xbd, 0x16, 0x5d},
+						},
+						{
+							"265-c6.c6",
+							8388608,
+							[]byte{0x03, 0xfd, 0xd1, 0xeb},
+						},
+						{
+							"265-c7.c7",
+							8388608,
+							[]byte{0x1a, 0x27, 0x49, 0xd8},
+						},
+						{
+							"265-c8.c8",
+							8388608,
+							[]byte{0xab, 0x0b, 0xb5, 0x49},
+						},
+					},
+				},
+			},
+		},
+		kf2k2pls{},
+		"The King of Fighters 2002 Plus (bootleg set 1)",
+		2002,
+		"bootleg",
+		Fighting,
+		56,
+	},
+	"kf2k2pla": {
+		mameGame{
+			"kof2002",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"2k2-p1pa.bin",
+							1048576,
+							[]byte{0x6a, 0x3a, 0x02, 0xf3},
+						},
+						{
+							"265-p2.sp2",
+							4194304,
+							[]byte{0x32, 0x72, 0x66, 0xb8},
+						},
+					},
+				},
+				{
+					262144,
+					[]mameROM{
+						{
+							"2k2-s1pa.bin",
+							131072,
+							[]byte{0x1a, 0x3e, 0xd0, 0x64},
+						},
+					},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"265-m1.m1",
+							131072,
+							[]byte{0x85, 0xaa, 0xa6, 0x32},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"265-v1.v1",
+							8388608,
+							[]byte{0x15, 0xe8, 0xf3, 0xf5},
+						},
+						{
+							"265-v2.v2",
+							8388608,
+							[]byte{0xda, 0x41, 0xd6, 0xf9},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"265-c1.c1",
+							8388608,
+							[]byte{0x2b, 0x65, 0xa6, 0x56},
+						},
+						{
+							"265-c2.c2",
+							8388608,
+							[]byte{0xad, 0xf1, 0x89, 0x83},
+						},
+						{
+							"265-c3.c3",
+							8388608,
+							[]byte{0x87, 0x5e, 0x9f, 0xd7},
+						},
+						{
+							"265-c4.c4",
+							8388608,
+							[]byte{0x2d, 0xa1, 0x39, 0x47},
+						},
+						{
+							"265-c5.c5",
+							8388608,
+							[]byte{0x61, 0xbd, 0x16, 0x5d},
+						},
+						{
+							"265-c6.c6",
+							8388608,
+							[]byte{0x03, 0xfd, 0xd1, 0xeb},
+						},
+						{
+							"265-c7.c7",
+							8388608,
+							[]byte{0x1a, 0x27, 0x49, 0xd8},
+						},
+						{
+							"265-c8.c8",
+							8388608,
+							[]byte{0xab, 0x0b, 0xb5, 0x49},
+						},
+					},
+				},
+			},
+		},
+		kf2k2pls{},
+		"The King of Fighters 2002 Plus (bootleg set 2)",
+		2002,
+		"bootleg",
+		Fighting,
+		55,
 	},
 	"kof10th": {
 		mameGame{

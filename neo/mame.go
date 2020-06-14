@@ -34,15 +34,19 @@ const (
 
 // CMC50 XOR keys
 const (
-	kof2000GfxKey  = 0x00
-	kof2001GfxKey  = 0x1e
-	kof2003GfxKey  = 0x9d
-	jockeygpGfxKey = 0xac
-	mslug4GfxKey   = 0x31
-	mslug5GfxKey   = 0x19
-	pnyaaGfxKey    = 0x2e
-	rotdGfxKey     = 0x3f
-	svcGfxKey      = 0x57
+	kof2000GfxKey   = 0x00
+	kof2001GfxKey   = 0x1e
+	kof2002GfxKey   = 0xec
+	kof2003GfxKey   = 0x9d
+	jockeygpGfxKey  = 0xac
+	matrimGfxKey    = 0x6a
+	mslug4GfxKey    = 0x31
+	mslug5GfxKey    = 0x19
+	pnyaaGfxKey     = 0x2e
+	rotdGfxKey      = 0x3f
+	samsho5GfxKey   = 0x0f
+	samsho5spGfxKey = 0x0d
+	svcGfxKey       = 0x57
 )
 
 type mameROM struct {
@@ -372,6 +376,67 @@ func commonPVCReader(f *File, g mameGame, readers [][]io.Reader, xor1, xor2 [0x2
 	return nil
 }
 
+func commonK2K2Reader(f *File, g mameGame, readers [][]io.Reader, xor int, decryptSfix bool, value int, blocks []int) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			b, err := commonPReader(g.area[P], readers[P], regexp.MustCompile(`\.ep`))
+			if err != nil {
+				return err
+			}
+
+			offset := 0x100000
+			// samsho5
+			if len(blocks) > 8 {
+				offset = 0
+			}
+
+			dst := make([]byte, 0x80000*len(blocks))
+			copy(dst, b[offset:])
+
+			for i, x := range blocks {
+				copy(b[offset+i*0x80000:], dst[x:x+0x80000])
+			}
+
+			f.ROM[P] = b
+		case S:
+			if decryptSfix {
+				break
+			}
+			if f.ROM[S], err = commonPaddedReader(g.area[S], readers[S]); err != nil {
+				return err
+			}
+		case M:
+			b, err := commonPaddedReader(g.area[M], readers[M])
+			if err != nil {
+				return err
+			}
+			f.ROM[M] = cmc50M1Decrypt(b)
+		case V1:
+			b, err := commonPaddedReader(g.area[V1], readers[V1])
+			if err != nil {
+				return err
+			}
+			f.ROM[V1] = pcm2Swap(b, value)
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc50GfxDecrypt(b, xor)
+			if decryptSfix {
+				f.ROM[S] = cmcSfixDecrypt(f.ROM[C], int(g.area[S].size))
+			}
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // unsupported explicitly errors
 type unsupported struct{}
 
@@ -635,6 +700,13 @@ func (gpilotsp) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// kf2k2pls uses PCM2, CMC50 encryption and its own P encryption
+type kf2k2pls struct{}
+
+func (kf2k2pls) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonK2K2Reader(f, g, readers, kof2002GfxKey, false, 0, []int{0x100000, 0x280000, 0x300000, 0x180000, 0x000000, 0x380000, 0x200000, 0x080000})
+}
+
 // kof2000 uses SMA and CMC50 encryption
 type kof2000 struct{}
 
@@ -701,6 +773,13 @@ type kof2001 struct{}
 
 func (kof2001) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC50Reader(f, g, readers, kof2001GfxKey)
+}
+
+// kof2002 uses PCM2, CMC50 encryption and its own P encryption
+type kof2002 struct{}
+
+func (kof2002) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonK2K2Reader(f, g, readers, kof2002GfxKey, true, 0, []int{0x100000, 0x280000, 0x300000, 0x180000, 0x000000, 0x380000, 0x200000, 0x080000})
 }
 
 // kof2003 uses PVC, PCM2 and CMC50 encryption
@@ -1006,6 +1085,13 @@ func (jockeygp) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC50Reader(f, g, readers, jockeygpGfxKey)
 }
 
+// matrim uses PCM2, CMC50 encryption and its own P encryption
+type matrim struct{}
+
+func (matrim) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonK2K2Reader(f, g, readers, matrimGfxKey, true, 1, []int{0x100000, 0x280000, 0x300000, 0x180000, 0x000000, 0x380000, 0x200000, 0x080000})
+}
+
 // mslug3 uses SMA and CMC42 encryption
 type mslug3 struct{}
 
@@ -1270,6 +1356,20 @@ type s1945p struct{}
 
 func (s1945p) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, s1945pGfxKey)
+}
+
+// samsh5sp uses PCM2, CMC50 encryption and its own P encryption
+type samsh5sp struct{}
+
+func (samsh5sp) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonK2K2Reader(f, g, readers, samsho5spGfxKey, true, 6, []int{0x000000, 0x080000, 0x500000, 0x480000, 0x600000, 0x580000, 0x700000, 0x280000, 0x100000, 0x680000, 0x400000, 0x780000, 0x200000, 0x380000, 0x300000, 0x180000})
+}
+
+// samsho5 uses PCM2, CMC50 encryption and its own P encryption
+type samsho5 struct{}
+
+func (samsho5) read(f *File, g mameGame, readers [][]io.Reader) error {
+	return commonK2K2Reader(f, g, readers, samsho5GfxKey, true, 4, []int{0x000000, 0x080000, 0x700000, 0x680000, 0x500000, 0x180000, 0x200000, 0x480000, 0x300000, 0x780000, 0x600000, 0x280000, 0x100000, 0x580000, 0x400000, 0x380000})
 }
 
 // sengoku3 uses CMC42 encryption
