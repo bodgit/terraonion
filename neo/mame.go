@@ -974,6 +974,50 @@ func (ms4plus) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPCM2Reader(f, g, readers, mslug4GfxKey, false, 8)
 }
 
+// ms5plus uses PCM2 and CMC50 encryption and its own S area encryption
+type ms5plus struct{}
+
+func (ms5plus) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			if f.ROM[P], err = commonPReader(g.area[P], readers[P], regexp.MustCompile(`\.ep`)); err != nil {
+				return err
+			}
+		case S:
+			b, err := commonPaddedReader(g.area[S], readers[S])
+			if err != nil {
+				return err
+			}
+			f.ROM[S] = sxDecrypt(b, 1)
+		case M:
+			b, err := commonPaddedReader(g.area[M], readers[M])
+			if err != nil {
+				return err
+			}
+			f.ROM[M] = cmc50M1Decrypt(b)
+		case V1:
+			b, err := commonPaddedReader(g.area[V1], readers[V1])
+			if err != nil {
+				return err
+			}
+			f.ROM[V1] = pcm2Swap(b, 2)
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc50GfxDecrypt(b, mslug5GfxKey)
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // mslug4 uses PCM2 and CMC50 encryption
 type mslug4 struct{}
 

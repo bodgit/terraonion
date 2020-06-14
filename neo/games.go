@@ -22335,6 +22335,123 @@ var mameGames = map[string]struct {
 		Fighting,
 		62,
 	},
+	"ms5plus": {
+		mameGame{
+			"mslug5",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"ms5-p1p.bin",
+							1048576,
+							[]byte{0x10, 0x6b, 0x27, 0x6f},
+						},
+						{
+							"ms5-p2p.bin",
+							2097152,
+							[]byte{0xd6, 0xa4, 0x58, 0xe8},
+						},
+						{
+							"ms5-p3p.bin",
+							2097152,
+							[]byte{0x43, 0x9e, 0xc0, 0x31},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{
+						{
+							"ms5-s1p.bin",
+							131072,
+							[]byte{0x21, 0xe0, 0x44, 0x32},
+						},
+					},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"268-m1.m1",
+							524288,
+							[]byte{0x4a, 0x5a, 0x6e, 0x0e},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"268-v1c.v1",
+							8388608,
+							[]byte{0xae, 0x31, 0xd6, 0x0c},
+						},
+						{
+							"268-v2c.v2",
+							8388608,
+							[]byte{0xc4, 0x06, 0x13, 0xed},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"268-c1c.c1",
+							8388608,
+							[]byte{0xab, 0x7c, 0x38, 0x9a},
+						},
+						{
+							"268-c2c.c2",
+							8388608,
+							[]byte{0x35, 0x60, 0x88, 0x1b},
+						},
+						{
+							"268-c3c.c3",
+							8388608,
+							[]byte{0x3a, 0xf9, 0x55, 0xea},
+						},
+						{
+							"268-c4c.c4",
+							8388608,
+							[]byte{0xc3, 0x29, 0xc3, 0x73},
+						},
+						{
+							"268-c5c.c5",
+							8388608,
+							[]byte{0x95, 0x9c, 0x81, 0x77},
+						},
+						{
+							"268-c6c.c6",
+							8388608,
+							[]byte{0x01, 0x0a, 0x83, 0x1b},
+						},
+						{
+							"268-c7c.c7",
+							8388608,
+							[]byte{0x6d, 0x72, 0xa9, 0x69},
+						},
+						{
+							"268-c8c.c8",
+							8388608,
+							[]byte{0x55, 0x1d, 0x72, 0x0e},
+						},
+					},
+				},
+			},
+		},
+		ms5plus{},
+		"Metal Slug 5 Plus (bootleg)",
+		2003,
+		"bootleg",
+		Action,
+		98,
+	},
 	"pbobblenb": {
 		mameGame{
 			"pbobblen",
