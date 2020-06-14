@@ -741,6 +741,59 @@ func (kof95a) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// kof97oro uses its own P, S and C encryption
+type kof97oro struct{}
+
+func (kof97oro) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			b, err := commonPReader(g.area[P], readers[P], regexp.MustCompile(`\.ep`))
+			if err != nil {
+				return err
+			}
+			f.ROM[P] = make([]byte, len(b))
+			copy(f.ROM[P][:0x100000], b[:0x100000])
+			copy(f.ROM[P][0x200000:0x300000], b[0x100000:0x200000])
+			copy(f.ROM[P][0x100000:0x200000], b[0x200000:0x300000])
+			copy(f.ROM[P][0x400000:0x500000], b[0x300000:0x400000])
+			copy(f.ROM[P][0x300000:0x400000], b[0x400000:0x500000])
+			copy(b, f.ROM[P])
+			for i := 0; i < len(b)/2; i++ {
+				copy(f.ROM[P][i*2:(i+1)*2], b[(i^0x7ffef)*2:])
+			}
+		case S:
+			b, err := commonPaddedReader(g.area[S], readers[S])
+			if err != nil {
+				return err
+			}
+			f.ROM[S] = sxDecrypt(b, 1)
+		case C:
+			intermediates := []io.Reader{}
+			for i := 0; i < len(readers); i += 2 {
+				intermediate, err := interleaveROM(1, readers[C][i], readers[C][i+1])
+				if err != nil {
+					return err
+				}
+				intermediates = append(intermediates, intermediate)
+			}
+
+			b, err := ioutil.ReadAll(io.MultiReader(intermediates...))
+			if err != nil {
+				return err
+			}
+
+			f.ROM[C] = cxDecrypt(b)
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // kof99 uses SMA and CMC42 encryption
 type kof99 struct{}
 

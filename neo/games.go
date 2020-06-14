@@ -21898,6 +21898,118 @@ var mameGames = map[string]struct {
 		Action,
 		17,
 	},
+	"kof97oro": {
+		mameGame{
+			"kof97",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"orochi-p1.bin",
+							1048576,
+							[]byte{0x6d, 0xcb, 0x29, 0x46},
+						},
+						{
+							"orochi-p21.bin",
+							2097152,
+							[]byte{0x6e, 0x1c, 0x4d, 0x8c},
+						},
+						{
+							"orochi-p29.bin",
+							2097152,
+							[]byte{0x4c, 0x7c, 0x02, 0x21},
+						},
+					},
+				},
+				{
+					262144,
+					[]mameROM{
+						{
+							"orochi-s1.bin",
+							131072,
+							[]byte{0x4e, 0xe2, 0x14, 0x9a},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{
+						{
+							"orochi-m1.bin",
+							131072,
+							[]byte{0x45, 0x34, 0x87, 0x47},
+						},
+					},
+				},
+				{
+					12582912,
+					[]mameROM{
+						{
+							"orochi-v1.bin",
+							4194304,
+							[]byte{0x22, 0xa2, 0xb5, 0xb5},
+						},
+						{
+							"orochi-v2.bin",
+							4194304,
+							[]byte{0x23, 0x04, 0xe7, 0x44},
+						},
+						{
+							"orochi-v3.bin",
+							4194304,
+							[]byte{0x75, 0x9e, 0xb9, 0x54},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					41943040,
+					[]mameROM{
+						{
+							"orochi-c1.bin",
+							16777216,
+							[]byte{0xf1, 0x3e, 0x84, 0x1c},
+						},
+						{
+							"orochi-c2.bin",
+							16777216,
+							[]byte{0x2d, 0xb1, 0xf6, 0xd3},
+						},
+						{
+							"orochi-c51.bin",
+							2097152,
+							[]byte{0xa9, 0x03, 0x40, 0xcb},
+						},
+						{
+							"orochi-c61.bin",
+							2097152,
+							[]byte{0x18, 0x8e, 0x35, 0x1a},
+						},
+						{
+							"orochi-c52.bin",
+							2097152,
+							[]byte{0xd4, 0xee, 0xc5, 0x0a},
+						},
+						{
+							"orochi-c62.bin",
+							2097152,
+							[]byte{0x03, 0x1b, 0x1a, 0xd5},
+						},
+					},
+				},
+			},
+		},
+		kof97oro{},
+		"The King of Fighters '97 Chongchu Jianghu Plus 2003 (bootleg)",
+		1997,
+		"bootleg",
+		Fighting,
+		72,
+	},
 	"kof97pls": {
 		mameGame{
 			"kof97",
