@@ -960,6 +960,39 @@ func (mslug3a) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return nil
 }
 
+// mslug3b6 uses CMC42 encryption and its own S area encryption
+type mslug3b6 struct{}
+
+func (mslug3b6) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			// Only read 1 MB of the first ROM
+			if f.ROM[P], err = ioutil.ReadAll(io.MultiReader(io.LimitReader(readers[P][0], 0x100000), readers[P][1])); err != nil {
+				return err
+			}
+		case S:
+			b, err := commonPaddedReader(g.area[S], readers[S])
+			if err != nil {
+				return err
+			}
+			f.ROM[S] = sxDecrypt(b, 2)
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cmc42GfxDecrypt(b, mslug3GfxKey)
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // mslug3h uses CMC42 encryption
 type mslug3h struct{}
 

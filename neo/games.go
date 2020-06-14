@@ -22005,6 +22005,128 @@ var mameGames = map[string]struct {
 		Fighting,
 		73,
 	},
+	"mslug3b6": {
+		mameGame{
+			"mslug3",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"299-p1.bin",
+							2097152,
+							[]byte{0x5f, 0x2f, 0xe2, 0x28},
+						},
+						{
+							"299-p2.bin",
+							4194304,
+							[]byte{0x19, 0x3f, 0xa8, 0x35},
+						},
+					},
+				},
+				{
+					262144,
+					[]mameROM{
+						{
+							"299-s1.bin",
+							131072,
+							[]byte{0x6f, 0x8b, 0x96, 0x35},
+						},
+					},
+				},
+				{
+					524288,
+					[]mameROM{
+						{
+							"256-m1.m1",
+							524288,
+							[]byte{0xea, 0xee, 0xc1, 0x16},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"256-v1.v1",
+							4194304,
+							[]byte{0xf2, 0x69, 0x02, 0x41},
+						},
+						{
+							"256-v2.v2",
+							4194304,
+							[]byte{0x7e, 0x2a, 0x10, 0xbd},
+						},
+						{
+							"256-v3.v3",
+							4194304,
+							[]byte{0x0e, 0xae, 0xc1, 0x7c},
+						},
+						{
+							"256-v4.v4",
+							4194304,
+							[]byte{0x9b, 0x4b, 0x22, 0xd4},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"256-c1.c1",
+							8388608,
+							[]byte{0x5a, 0x79, 0xc3, 0x4e},
+						},
+						{
+							"256-c2.c2",
+							8388608,
+							[]byte{0x94, 0x4c, 0x36, 0x2c},
+						},
+						{
+							"256-c3.c3",
+							8388608,
+							[]byte{0x6e, 0x69, 0xd3, 0x6f},
+						},
+						{
+							"256-c4.c4",
+							8388608,
+							[]byte{0xb7, 0x55, 0xb4, 0xeb},
+						},
+						{
+							"256-c5.c5",
+							8388608,
+							[]byte{0x7a, 0xac, 0xab, 0x47},
+						},
+						{
+							"256-c6.c6",
+							8388608,
+							[]byte{0xc6, 0x98, 0xfd, 0x5d},
+						},
+						{
+							"256-c7.c7",
+							8388608,
+							[]byte{0xcf, 0xce, 0xdd, 0xd2},
+						},
+						{
+							"256-c8.c8",
+							8388608,
+							[]byte{0x4d, 0x9b, 0xe3, 0x4c},
+						},
+					},
+				},
+			},
+		},
+		mslug3b6{},
+		"Metal Slug 6 (Metal Slug 3 bootleg)",
+		2000,
+		"bootleg",
+		Action,
+		102,
+	},
 	"nitdbl": {
 		mameGame{
 			"nitd",
