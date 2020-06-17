@@ -23458,6 +23458,118 @@ var mameGames = map[string]struct {
 		Fighting,
 		73,
 	},
+	"lans2004": {
+		mameGame{
+			"shocktr2",
+			[...]mameArea{
+				{
+					6291456,
+					[]mameROM{
+						{
+							"lnsq-p1.bin",
+							2097152,
+							[]byte{0xb4, 0x0a, 0x87, 0x9a},
+						},
+						{
+							"lnsq-p21.bin",
+							2097152,
+							[]byte{0xec, 0xdb, 0x2d, 0x42},
+						},
+						{
+							"lnsq-p22.bin",
+							2097152,
+							[]byte{0xfa, 0xc5, 0xe2, 0xe7},
+						},
+					},
+				},
+				{
+					262144,
+					[]mameROM{
+						{
+							"lnsq-s1.bin",
+							131072,
+							[]byte{0x39, 0xe8, 0x28, 0x97},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{
+						{
+							"246-m1.bin",
+							131072,
+							[]byte{0xd0, 0x60, 0x4a, 0xd1},
+						},
+					},
+				},
+				{
+					10485760,
+					[]mameROM{
+						{
+							"lnsq-v1.bin",
+							4194304,
+							[]byte{0x44, 0x08, 0xeb, 0xc3},
+						},
+						{
+							"lnsq-v2.bin",
+							4194304,
+							[]byte{0x3d, 0x95, 0x39, 0x75},
+						},
+						{
+							"lnsq-v3.bin",
+							2097152,
+							[]byte{0x43, 0x7d, 0x1d, 0x8e},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					50331648,
+					[]mameROM{
+						{
+							"lnsq-c1.bin",
+							8388608,
+							[]byte{0xb8, 0x3d, 0xe5, 0x9f},
+						},
+						{
+							"lnsq-c2.bin",
+							8388608,
+							[]byte{0xe0, 0x89, 0x69, 0xfd},
+						},
+						{
+							"lnsq-c3.bin",
+							8388608,
+							[]byte{0x01, 0x3f, 0x2c, 0xda},
+						},
+						{
+							"lnsq-c4.bin",
+							8388608,
+							[]byte{0xd8, 0xc3, 0xa7, 0x58},
+						},
+						{
+							"lnsq-c5.bin",
+							8388608,
+							[]byte{0x75, 0x50, 0x0b, 0x82},
+						},
+						{
+							"lnsq-c6.bin",
+							8388608,
+							[]byte{0x67, 0x0a, 0xc1, 0x3b},
+						},
+					},
+				},
+			},
+		},
+		lans2004{},
+		"Lansquenet 2004 (Shock Troopers - 2nd Squad bootleg)",
+		1998,
+		"bootleg",
+		Action,
+		80,
+	},
 	"garoubl": {
 		mameGame{
 			"garou",

@@ -1085,6 +1085,77 @@ func (jockeygp) read(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC50Reader(f, g, readers, jockeygpGfxKey)
 }
 
+// lans2004 uses its own P, S, V1, and C encryption
+type lans2004 struct{}
+
+func (lans2004) read(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			b, err := ioutil.ReadAll(io.MultiReader(readers[P]...))
+			if err != nil {
+				return err
+			}
+
+			sec := []int{0x3, 0x8, 0x7, 0xc, 0x1, 0xa, 0x6, 0xd}
+			dst := make([]byte, 0x600000)
+			for i := 0; i < 8; i++ {
+				copy(dst[i*0x20000:(i+1)*0x20000], b[sec[i]*0x20000:])
+			}
+			copy(dst[0x0bbb00:0x0bd210], b[0x045b00:])
+			copy(dst[0x02fff0:0x030000], b[0x1a92be:])
+			copy(dst[0x100000:0x500000], b[0x200000:])
+
+			rom := make([]uint16, len(dst)/2)
+			for i := range rom {
+				rom[i] = binary.LittleEndian.Uint16(dst[i*2 : (i+1)*2])
+			}
+
+			for i := 0xbbb00 / 2; i < 0xbe000/2; i++ {
+				if (rom[i]&0xffbf == 0x4eb9 || rom[i]&0xffbf == 0x43b9) && rom[i+1] == 0x0000 {
+					rom[i+1] = 0x000b
+					rom[i+2] += 0x6000
+				}
+			}
+
+			rom[0x2d15c/2] = 0x000b
+			rom[0x2d15e/2] = 0xbb00
+			rom[0x2d1e4/2] = 0x6002
+			rom[0x2ea7e/2] = 0x6002
+			rom[0xbbcd0/2] = 0x6002
+			rom[0xbbdf2/2] = 0x6002
+			rom[0xbbe42/2] = 0x6002
+
+			f.ROM[P] = uint16SliceToBytes(rom)
+		case S:
+			b, err := commonPaddedReader(g.area[S], readers[S])
+			if err != nil {
+				return err
+			}
+			f.ROM[S] = sxDecrypt(b, 1)
+		case V1:
+			if f.ROM[V1], err = commonPaddedReader(g.area[V1], readers[V1]); err != nil {
+				return err
+			}
+			for i := 0; i < 0xa00000; i++ {
+				f.ROM[V1][i] = bitswapByte(f.ROM[V1][i], 0, 1, 5, 4, 3, 2, 6, 7)
+			}
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cxDecrypt(b)
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // matrim uses PCM2, CMC50 encryption and its own P encryption
 type matrim struct{}
 
