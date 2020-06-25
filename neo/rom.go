@@ -1,6 +1,7 @@
 package neo
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"io"
@@ -21,13 +22,21 @@ func interleaveROM(width int64, readers ...io.Reader) (io.Reader, error) {
 		return nil, errInvalidInterleave
 	}
 
+	// Use a bufio.Reader to wrap each reader otherwise interleaving real
+	// files with a small width is very CPU intensive and slow
+	bufferedReaders := make([]*bufio.Reader, len(readers))
+	for i := range readers {
+		// If readers[i] is already somehow a bufio.Reader it's a no-op
+		bufferedReaders[i] = bufio.NewReader(readers[i])
+	}
+
 	var tail []int64
 
 	b := new(bytes.Buffer)
 loop:
 	for {
 		for i := range order {
-			n, err := io.CopyN(b, readers[order[i]], width)
+			n, err := io.CopyN(b, bufferedReaders[order[i]], width)
 			if err != nil {
 				if err != io.EOF {
 					return nil, err
