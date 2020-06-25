@@ -37,7 +37,6 @@ const (
 var (
 	errInvalid      = errors.New("neo: invalid data")
 	errTooMuch      = errors.New("neo: too much data")
-	errUnmatchedROM = errors.New("neo: unable to match ROM")
 	errGameNotFound = errors.New("neo: game not found")
 	errROMNotFound  = errors.New("neo: ROM not found")
 	errUnsupported  = errors.New("neo: unsupported game")
@@ -302,10 +301,8 @@ func (f *File) readGenericROM(path string) error {
 			area = V1
 		} else if regexp.MustCompile(`[vV]2\d`).MatchString(file) {
 			area = V2
-		}
-
-		if area == Areas {
-			return errUnmatchedROM
+		} else {
+			continue
 		}
 
 		size, err := r.Size(file)
