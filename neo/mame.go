@@ -75,9 +75,7 @@ type mameGame struct {
 	area   [Areas]mameArea
 }
 
-type gameReader interface {
-	read(*File, mameGame, [][]io.Reader) error
-}
+type gameReader func(*File, mameGame, [][]io.Reader) error
 
 func uint16SliceToBytes(rom []uint16) []byte {
 	b := make([]byte, len(rom)*2)
@@ -438,16 +436,12 @@ func commonK2K2Reader(f *File, g mameGame, readers [][]io.Reader, xor int, decry
 }
 
 // unsupported explicitly errors
-type unsupported struct{}
-
-func (unsupported) read(f *File, g mameGame, readers [][]io.Reader) error {
+func unsupported(f *File, g mameGame, readers [][]io.Reader) error {
 	return errUnsupported
 }
 
 // common handles the majority of games
-type common struct{}
-
-func (common) read(f *File, g mameGame, readers [][]io.Reader) error {
+func common(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -469,16 +463,12 @@ func (common) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // bangbead uses CMC42 encryption
-type bangbead struct{}
-
-func (bangbead) read(f *File, g mameGame, readers [][]io.Reader) error {
+func bangbead(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, bangbeadGfxKey)
 }
 
 // dragonsh has a couple of missing ROMs which are replaced with "erased" images of the expected size
-type dragonsh struct{}
-
-func (dragonsh) read(f *File, g mameGame, readers [][]io.Reader) error {
+func dragonsh(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -505,9 +495,7 @@ func (dragonsh) read(f *File, g mameGame, readers [][]io.Reader) error {
 
 // fightfeva is standard apart from the patch ROM isn't named following the
 // same convention as other patch ROMs; it's named as .sp2 instead of .ep1
-type fightfeva struct{}
-
-func (fightfeva) read(f *File, g mameGame, readers [][]io.Reader) error {
+func fightfeva(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -529,16 +517,12 @@ func (fightfeva) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // ganryu uses CMC42 encryption
-type ganryu struct{}
-
-func (ganryu) read(f *File, g mameGame, readers [][]io.Reader) error {
+func ganryu(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, ganryuGfxKey)
 }
 
 // garou uses SMA and CMC42 encryption
-type garou struct{}
-
-func (garou) read(f *File, g mameGame, readers [][]io.Reader) error {
+func garou(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -584,9 +568,7 @@ func (garou) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // garoubl uses its own S and C encryption
-type garoubl struct{}
-
-func (garoubl) read(f *File, g mameGame, readers [][]io.Reader) error {
+func garoubl(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -616,9 +598,7 @@ func (garoubl) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // garouh uses SMA and CMC42 encryption
-type garouh struct{}
-
-func (garouh) read(f *File, g mameGame, readers [][]io.Reader) error {
+func garouh(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -677,9 +657,7 @@ func gpilotspPReader(a mameArea, readers []io.Reader) ([]byte, error) {
 	return ioutil.ReadAll(io.MultiReader(intermediates...))
 }
 
-type gpilotsp struct{}
-
-func (gpilotsp) read(f *File, g mameGame, readers [][]io.Reader) error {
+func gpilotsp(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -701,16 +679,12 @@ func (gpilotsp) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // kf2k2pls uses PCM2, CMC50 encryption and its own P encryption
-type kf2k2pls struct{}
-
-func (kf2k2pls) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kf2k2pls(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonK2K2Reader(f, g, readers, kof2002GfxKey, false, 0, []int{0x100000, 0x280000, 0x300000, 0x180000, 0x000000, 0x380000, 0x200000, 0x080000})
 }
 
 // kof2000 uses SMA and CMC50 encryption
-type kof2000 struct{}
-
-func (kof2000) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof2000(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -762,44 +736,32 @@ func (kof2000) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // kof2000n uses CMC50 encryption
-type kof2000n struct{}
-
-func (kof2000n) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof2000n(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC50Reader(f, g, readers, kof2000GfxKey)
 }
 
 // kof2001 uses CMC50 encryption
-type kof2001 struct{}
-
-func (kof2001) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof2001(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC50Reader(f, g, readers, kof2001GfxKey)
 }
 
 // kof2002 uses PCM2, CMC50 encryption and its own P encryption
-type kof2002 struct{}
-
-func (kof2002) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof2002(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonK2K2Reader(f, g, readers, kof2002GfxKey, true, 0, []int{0x100000, 0x280000, 0x300000, 0x180000, 0x000000, 0x380000, 0x200000, 0x080000})
 }
 
 // kof2003 uses PVC, PCM2 and CMC50 encryption
-type kof2003 struct{}
-
-func (kof2003) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof2003(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPVCReader(f, g, readers, [0x20]byte{0x3b, 0x6a, 0xf7, 0xb7, 0xe8, 0xa9, 0x20, 0x99, 0x9f, 0x39, 0x34, 0x0c, 0xc3, 0x9a, 0xa5, 0xc8, 0xb8, 0x18, 0xce, 0x56, 0x94, 0x44, 0xe3, 0x7a, 0xf7, 0xdd, 0x42, 0xf0, 0x18, 0x60, 0x92, 0x9f}, [0x20]byte{0x2f, 0x02, 0x60, 0xbb, 0x77, 0x01, 0x30, 0x08, 0xd8, 0x01, 0xa0, 0xdf, 0x37, 0x0a, 0xf0, 0x65, 0x28, 0x03, 0xd0, 0x23, 0xd3, 0x03, 0x70, 0x42, 0xbb, 0x06, 0xf0, 0x28, 0xba, 0x0f, 0xf0, 0x7a}, []int{15, 14, 13, 12, 5, 4, 7, 6, 9, 8, 11, 10, 3, 2, 1, 0}, []int{7, 6, 5, 4, 0, 1, 2, 3}, []int{4, 5, 6, 7, 1, 0, 3, 2}, 0x00800, 5, kof2003GfxKey)
 }
 
 // kof2003h uses PVC, PCM2 and CMC50 encryption
-type kof2003h struct{}
-
-func (kof2003h) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof2003h(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPVCReader(f, g, readers, [0x20]byte{0xc2, 0x4b, 0x74, 0xfd, 0x0b, 0x34, 0xeb, 0xd7, 0x10, 0x6d, 0xf9, 0xce, 0x5d, 0xd5, 0x61, 0x29, 0xf5, 0xbe, 0x0d, 0x82, 0x72, 0x45, 0x0f, 0x24, 0xb3, 0x34, 0x1b, 0x99, 0xea, 0x09, 0xf3, 0x03}, [0x20]byte{0x2b, 0x09, 0xd0, 0x7f, 0x51, 0x0b, 0x10, 0x4c, 0x5b, 0x07, 0x70, 0x9d, 0x3e, 0x0b, 0xb0, 0xb6, 0x54, 0x09, 0xe0, 0xcc, 0x3d, 0x0d, 0x80, 0x99, 0x87, 0x03, 0x90, 0x82, 0xfe, 0x04, 0x20, 0x18}, []int{15, 14, 13, 12, 10, 11, 8, 9, 6, 7, 4, 5, 3, 2, 1, 0}, []int{7, 6, 5, 4, 1, 0, 3, 2}, []int{6, 7, 4, 5, 0, 1, 2, 3}, 0x00400, 5, kof2003GfxKey)
 }
 
 // kof95a is standard apart from the regular ROMs being named like patch ROMs
-type kof95a struct{}
-
-func (kof95a) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof95a(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -821,9 +783,7 @@ func (kof95a) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // kof97oro uses its own P, S and C encryption
-type kof97oro struct{}
-
-func (kof97oro) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof97oro(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -874,9 +834,7 @@ func (kof97oro) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // kof98 has its own P encryption
-type kof98 struct{}
-
-func (kof98) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof98(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -931,9 +889,7 @@ func (kof98) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // kof99 uses SMA and CMC42 encryption
-type kof99 struct{}
-
-func (kof99) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof99(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -979,9 +935,7 @@ func (kof99) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // kof99ka uses CMC42 encryption
-type kof99ka struct{}
-
-func (kof99ka) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kof99ka(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, kof99GfxKey)
 }
 
@@ -1004,9 +958,7 @@ func kotm2CReader(a mameArea, readers []io.Reader) ([]byte, error) {
 	return ioutil.ReadAll(i)
 }
 
-type kotm2 struct{}
-
-func (kotm2) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kotm2(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -1055,9 +1007,7 @@ func kotm2pCReader(a mameArea, readers []io.Reader) ([]byte, error) {
 	return ioutil.ReadAll(io.MultiReader(intermediates...))
 }
 
-type kotm2p struct{}
-
-func (kotm2p) read(f *File, g mameGame, readers [][]io.Reader) error {
+func kotm2p(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -1079,16 +1029,12 @@ func (kotm2p) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // jockeygp uses CMC50 encryption
-type jockeygp struct{}
-
-func (jockeygp) read(f *File, g mameGame, readers [][]io.Reader) error {
+func jockeygp(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC50Reader(f, g, readers, jockeygpGfxKey)
 }
 
 // lans2004 uses its own P, S, V1, and C encryption
-type lans2004 struct{}
-
-func (lans2004) read(f *File, g mameGame, readers [][]io.Reader) error {
+func lans2004(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -1157,16 +1103,12 @@ func (lans2004) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // matrim uses PCM2, CMC50 encryption and its own P encryption
-type matrim struct{}
-
-func (matrim) read(f *File, g mameGame, readers [][]io.Reader) error {
+func matrim(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonK2K2Reader(f, g, readers, matrimGfxKey, true, 1, []int{0x100000, 0x280000, 0x300000, 0x180000, 0x000000, 0x380000, 0x200000, 0x080000})
 }
 
 // mslug3 uses SMA and CMC42 encryption
-type mslug3 struct{}
-
-func (mslug3) read(f *File, g mameGame, readers [][]io.Reader) error {
+func mslug3(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -1212,9 +1154,7 @@ func (mslug3) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // mslug3a uses SMA and CMC42 encryption
-type mslug3a struct{}
-
-func (mslug3a) read(f *File, g mameGame, readers [][]io.Reader) error {
+func mslug3a(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -1260,9 +1200,7 @@ func (mslug3a) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // mslug3b6 uses CMC42 encryption and its own S area encryption
-type mslug3b6 struct{}
-
-func (mslug3b6) read(f *File, g mameGame, readers [][]io.Reader) error {
+func mslug3b6(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -1293,23 +1231,17 @@ func (mslug3b6) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // mslug3h uses CMC42 encryption
-type mslug3h struct{}
-
-func (mslug3h) read(f *File, g mameGame, readers [][]io.Reader) error {
+func mslug3h(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, mslug3GfxKey)
 }
 
 // ms4plus uses PCM2 and CMC50 encryption but doesn't decrypt the S area
-type ms4plus struct{}
-
-func (ms4plus) read(f *File, g mameGame, readers [][]io.Reader) error {
+func ms4plus(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPCM2Reader(f, g, readers, mslug4GfxKey, false, 8)
 }
 
 // ms5plus uses PCM2 and CMC50 encryption and its own S area encryption
-type ms5plus struct{}
-
-func (ms5plus) read(f *File, g mameGame, readers [][]io.Reader) error {
+func ms5plus(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -1351,30 +1283,22 @@ func (ms5plus) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // mslug4 uses PCM2 and CMC50 encryption
-type mslug4 struct{}
-
-func (mslug4) read(f *File, g mameGame, readers [][]io.Reader) error {
+func mslug4(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPCM2Reader(f, g, readers, mslug4GfxKey, true, 8)
 }
 
 // mslug5 uses PVC, PCM2 and CMC50 encryption
-type mslug5 struct{}
-
-func (mslug5) read(f *File, g mameGame, readers [][]io.Reader) error {
+func mslug5(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPVCReader(f, g, readers, [0x20]byte{0xc2, 0x4b, 0x74, 0xfd, 0x0b, 0x34, 0xeb, 0xd7, 0x10, 0x6d, 0xf9, 0xce, 0x5d, 0xd5, 0x61, 0x29, 0xf5, 0xbe, 0x0d, 0x82, 0x72, 0x45, 0x0f, 0x24, 0xb3, 0x34, 0x1b, 0x99, 0xea, 0x09, 0xf3, 0x03}, [0x20]byte{0x36, 0x09, 0xb0, 0x64, 0x95, 0x0f, 0x90, 0x42, 0x6e, 0x0f, 0x30, 0xf6, 0xe5, 0x08, 0x30, 0x64, 0x08, 0x04, 0x00, 0x2f, 0x72, 0x09, 0xa0, 0x13, 0xc9, 0x0b, 0xa0, 0x3e, 0xc2, 0x00, 0x40, 0x2b}, []int{15, 14, 13, 12, 10, 11, 8, 9, 6, 7, 4, 5, 3, 2, 1, 0}, []int{7, 6, 5, 4, 1, 0, 3, 2}, []int{5, 4, 7, 6, 1, 0, 3, 2}, 0x00700, 2, mslug5GfxKey)
 }
 
 // nitd uses CMC42 encryption
-type nitd struct{}
-
-func (nitd) read(f *File, g mameGame, readers [][]io.Reader) error {
+func nitd(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, nitdGfxKey)
 }
 
 // pbobblenb is standard apart from the ADPCM area has 2 MB of empty space prepended
-type pbobblenb struct{}
-
-func (pbobblenb) read(f *File, g mameGame, readers [][]io.Reader) error {
+func pbobblenb(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -1402,58 +1326,42 @@ func (pbobblenb) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // pnyaa uses PCM2 and CMC50 encryption
-type pnyaa struct{}
-
-func (pnyaa) read(f *File, g mameGame, readers [][]io.Reader) error {
+func pnyaa(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPCM2Reader(f, g, readers, pnyaaGfxKey, true, 4)
 }
 
 // preisle2 uses CMC42 encryption
-type preisle2 struct{}
-
-func (preisle2) read(f *File, g mameGame, readers [][]io.Reader) error {
+func preisle2(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, preisle2GfxKey)
 }
 
 // rotd uses PCM2 and CMC50 encryption
-type rotd struct{}
-
-func (rotd) read(f *File, g mameGame, readers [][]io.Reader) error {
+func rotd(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPCM2Reader(f, g, readers, rotdGfxKey, true, 16)
 }
 
 // s1945p uses CMC42 encryption
-type s1945p struct{}
-
-func (s1945p) read(f *File, g mameGame, readers [][]io.Reader) error {
+func s1945p(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, s1945pGfxKey)
 }
 
 // samsh5sp uses PCM2, CMC50 encryption and its own P encryption
-type samsh5sp struct{}
-
-func (samsh5sp) read(f *File, g mameGame, readers [][]io.Reader) error {
+func samsh5sp(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonK2K2Reader(f, g, readers, samsho5spGfxKey, true, 6, []int{0x000000, 0x080000, 0x500000, 0x480000, 0x600000, 0x580000, 0x700000, 0x280000, 0x100000, 0x680000, 0x400000, 0x780000, 0x200000, 0x380000, 0x300000, 0x180000})
 }
 
 // samsho5 uses PCM2, CMC50 encryption and its own P encryption
-type samsho5 struct{}
-
-func (samsho5) read(f *File, g mameGame, readers [][]io.Reader) error {
+func samsho5(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonK2K2Reader(f, g, readers, samsho5GfxKey, true, 4, []int{0x000000, 0x080000, 0x700000, 0x680000, 0x500000, 0x180000, 0x200000, 0x480000, 0x300000, 0x780000, 0x600000, 0x280000, 0x100000, 0x580000, 0x400000, 0x380000})
 }
 
 // sengoku3 uses CMC42 encryption
-type sengoku3 struct{}
-
-func (sengoku3) read(f *File, g mameGame, readers [][]io.Reader) error {
+func sengoku3(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, sengoku3GfxKey)
 }
 
 // svc uses PVC, PCM2 and CMC50 encryption
-type svc struct{}
-
-func (svc) read(f *File, g mameGame, readers [][]io.Reader) error {
+func svc(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonPVCReader(f, g, readers, [0x20]byte{0x3b, 0x6a, 0xf7, 0xb7, 0xe8, 0xa9, 0x20, 0x99, 0x9f, 0x39, 0x34, 0x0c, 0xc3, 0x9a, 0xa5, 0xc8, 0xb8, 0x18, 0xce, 0x56, 0x94, 0x44, 0xe3, 0x7a, 0xf7, 0xdd, 0x42, 0xf0, 0x18, 0x60, 0x92, 0x9f}, [0x20]byte{0x69, 0x0b, 0x60, 0xd6, 0x4f, 0x01, 0x40, 0x1a, 0x9f, 0x0b, 0xf0, 0x75, 0x58, 0x0e, 0x60, 0xb4, 0x14, 0x04, 0x20, 0xe4, 0xb9, 0x0d, 0x10, 0x89, 0xeb, 0x07, 0x30, 0x90, 0x50, 0x0e, 0x20, 0x26}, []int{15, 14, 13, 12, 10, 11, 8, 9, 6, 7, 4, 5, 3, 2, 1, 0}, []int{7, 6, 5, 4, 2, 3, 0, 1}, []int{4, 5, 6, 7, 1, 0, 3, 2}, 0x00a00, 3, svcGfxKey)
 }
 
@@ -1476,9 +1384,7 @@ func viewpoinCReader(a mameArea, readers []io.Reader) ([]byte, error) {
 	return ioutil.ReadAll(i)
 }
 
-type viewpoin struct{}
-
-func (viewpoin) read(f *File, g mameGame, readers [][]io.Reader) error {
+func viewpoin(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
@@ -1500,8 +1406,6 @@ func (viewpoin) read(f *File, g mameGame, readers [][]io.Reader) error {
 }
 
 // zupapa uses CMC42 encryption
-type zupapa struct{}
-
-func (zupapa) read(f *File, g mameGame, readers [][]io.Reader) error {
+func zupapa(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, zupapaGfxKey)
 }

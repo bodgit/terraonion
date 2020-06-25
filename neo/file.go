@@ -244,7 +244,7 @@ func (f *File) readMameROM(path string) error {
 		}
 	}
 
-	return g.reader.read(f, g.mameGame, readers)
+	return g.reader(f, g.mameGame, readers)
 }
 
 type byROMFilename []string
@@ -335,5 +335,5 @@ func (f *File) readGenericROM(path string) error {
 
 	return errors.New("FIXME")
 
-	// return common{}.read(f, g, readers)
+	// return common(f, g, readers)
 }

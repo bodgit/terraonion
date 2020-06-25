@@ -338,7 +338,7 @@ var mameGames = map[string]struct {
 {{- end }}
 			},
 		},
-		{{ .Reader }}{},
+		{{ .Reader }},
 		"{{ .Description }}",
 		{{ .Year }},
 		"{{ .Publisher }}",
