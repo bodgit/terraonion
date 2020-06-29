@@ -24348,6 +24348,122 @@ var mameGames = map[string]struct {
 		Fighting,
 		62,
 	},
+	"matrimbl": {
+		mameGame{
+			"matrim",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"266-p1.p1",
+							1048576,
+							[]byte{0x5d, 0x4c, 0x2d, 0xc7},
+						},
+						{
+							"266-p2.sp2",
+							4194304,
+							[]byte{0xa1, 0x4b, 0x19, 0x06},
+						},
+					},
+				},
+				{
+					524288,
+					[]mameROM{},
+				},
+				{
+					131072,
+					[]mameROM{
+						{
+							"mart-m1.bin",
+							131072,
+							[]byte{0x3e, 0xa9, 0x6a, 0xb1},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"mart-v1.bin",
+							4194304,
+							[]byte{0x35, 0x2b, 0x0a, 0x07},
+						},
+						{
+							"mart-v2.bin",
+							4194304,
+							[]byte{0x1e, 0x9b, 0xd5, 0x9e},
+						},
+						{
+							"mart-v3.bin",
+							4194304,
+							[]byte{0xe8, 0x36, 0x2f, 0xcc},
+						},
+						{
+							"mart-v4.bin",
+							4194304,
+							[]byte{0xc8, 0xc7, 0x9b, 0x19},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"mart-c1.bin",
+							8388608,
+							[]byte{0xa5, 0x59, 0x56, 0x56},
+						},
+						{
+							"mart-c2.bin",
+							8388608,
+							[]byte{0xc5, 0xf7, 0xc3, 0x00},
+						},
+						{
+							"mart-c3.bin",
+							8388608,
+							[]byte{0x57, 0x4e, 0xfd, 0x7d},
+						},
+						{
+							"mart-c4.bin",
+							8388608,
+							[]byte{0x10, 0x9d, 0x54, 0xd9},
+						},
+						{
+							"mart-c5.bin",
+							8388608,
+							[]byte{0x15, 0xc9, 0xe8, 0x82},
+						},
+						{
+							"mart-c6.bin",
+							8388608,
+							[]byte{0x77, 0x49, 0x7b, 0x97},
+						},
+						{
+							"mart-c7.bin",
+							8388608,
+							[]byte{0xab, 0x48, 0x1b, 0xb6},
+						},
+						{
+							"mart-c8.bin",
+							8388608,
+							[]byte{0x90, 0x6c, 0xf2, 0x67},
+						},
+					},
+				},
+			},
+		},
+		matrimbl,
+		"Matrimelee / Shin Gouketsuji Ichizoku Toukon (bootleg)",
+		2002,
+		"bootleg",
+		Fighting,
+		93,
+	},
 	"ms5plus": {
 		mameGame{
 			"mslug5",

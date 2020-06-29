@@ -374,29 +374,37 @@ func commonPVCReader(f *File, g mameGame, readers [][]io.Reader, xor1, xor2 [0x2
 	return nil
 }
 
+func k2k2PReader(a mameArea, readers []io.Reader, blocks []int) ([]byte, error) {
+	b, err := commonPReader(a, readers, regexp.MustCompile(`\.ep`))
+	if err != nil {
+		return nil, err
+	}
+
+	offset := 0x100000
+	// samsho5
+	if len(blocks) > 8 {
+		offset = 0
+	}
+
+	dst := make([]byte, 0x80000*len(blocks))
+	copy(dst, b[offset:])
+
+	for i, x := range blocks {
+		copy(b[offset+i*0x80000:], dst[x:x+0x80000])
+	}
+
+	return b, nil
+}
+
 func commonK2K2Reader(f *File, g mameGame, readers [][]io.Reader, xor int, decryptSfix bool, value int, blocks []int) error {
 	for i := 0; i < Areas; i++ {
 		var err error
 		switch i {
 		case P:
-			b, err := commonPReader(g.area[P], readers[P], regexp.MustCompile(`\.ep`))
+			b, err := k2k2PReader(g.area[P], readers[P], blocks)
 			if err != nil {
 				return err
 			}
-
-			offset := 0x100000
-			// samsho5
-			if len(blocks) > 8 {
-				offset = 0
-			}
-
-			dst := make([]byte, 0x80000*len(blocks))
-			copy(dst, b[offset:])
-
-			for i, x := range blocks {
-				copy(b[offset+i*0x80000:], dst[x:x+0x80000])
-			}
-
 			f.ROM[P] = b
 		case S:
 			if decryptSfix {
@@ -1105,6 +1113,84 @@ func lans2004(f *File, g mameGame, readers [][]io.Reader) error {
 // matrim uses PCM2, CMC50 encryption and its own P encryption
 func matrim(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonK2K2Reader(f, g, readers, matrimGfxKey, true, 1, []int{0x100000, 0x280000, 0x300000, 0x180000, 0x000000, 0x380000, 0x200000, 0x080000})
+}
+
+func matrimblBitswapByte(i int) int {
+	return i ^ (int(bitswapByte(byte(i&0x3), 4, 3, 1, 2, 0, 7, 6, 5)) << 8)
+}
+
+// matrimbl uses partial CMC encryption and its own P, M & C encryption
+func matrimbl(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			if f.ROM[P], err = k2k2PReader(g.area[P], readers[P], []int{0x100000, 0x280000, 0x300000, 0x180000, 0x000000, 0x380000, 0x200000, 0x080000}); err != nil {
+				return err
+			}
+		case S:
+			break
+		case M:
+			b, err := commonPaddedReader(g.area[M], readers[M])
+			if err != nil {
+				return err
+			}
+
+			rom := make([]byte, 0x30000)
+			copy(rom, b)
+			copy(rom[0x10000:], b)
+
+			buf := make([]byte, 0x20000)
+			copy(buf, rom[0x10000:])
+			for i, j := 0, 0; i < 0x20000; i++ {
+				if i&0x10000 != 0 {
+					if i&0x800 != 0 {
+						j = matrimblBitswapByte(i) ^ 0x10000
+					} else {
+						j = matrimblBitswapByte(i ^ 0x01)
+					}
+				} else {
+					if i&0x800 != 0 {
+						j = matrimblBitswapByte(i^0x01) ^ 0x10000
+					} else {
+						j = matrimblBitswapByte(i)
+					}
+				}
+				rom[0x10000+j] = buf[i]
+			}
+			copy(rom[:0x10000], rom[0x10000:])
+			// XXX Not sure why I have to byteswap this?
+			// This makes things match the NeoBuilder output, but it's not obvious from the MAME sources
+			for i := 0x10000; i < 0x20000; i += 2 {
+				rom[i+0], rom[i+1] = rom[i+1], rom[i+0]
+			}
+			f.ROM[M] = rom[:0x20000]
+		case V1:
+			if f.ROM[V1], err = commonPaddedReader(g.area[V1], readers[V1]); err != nil {
+				return err
+			}
+			// XXX Not sure why I have to byteswap this?
+			// This makes things match the NeoBuilder output, but it's not obvious from the MAME sources
+			for i := 0x0400000; i < 0x0800000; i += 2 {
+				f.ROM[V1][i+0], f.ROM[V1][i+1] = f.ROM[V1][i+1], f.ROM[V1][i+0]
+			}
+			for i := 0x0c00000; i < 0x1000000; i += 2 {
+				f.ROM[V1][i+0], f.ROM[V1][i+1] = f.ROM[V1][i+1], f.ROM[V1][i+0]
+			}
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[S] = cmcSfixDecrypt(b, int(g.area[S].size))
+			f.ROM[C] = cthdDecrypt(b)
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 // mslug3 uses SMA and CMC42 encryption

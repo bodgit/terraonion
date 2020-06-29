@@ -94,6 +94,7 @@ func (s software) Reader() string {
 		"lans2004":   "lans2004",
 		"lresortp":   "kotm2p",
 		"matrim":     "matrim",
+		"matrimbl":   "matrimbl",
 		"ms4plus":    "ms4plus",
 		"ms5plus":    "ms5plus",
 		"mslug3":     "mslug3",
@@ -168,9 +169,7 @@ func (s software) IsSupportedSlot() bool {
 	for _, f := range s.Feature {
 		if f.Name == featureSlot {
 			switch f.Value {
-			case "boot_garoubl", "boot_kf10th", "boot_kof97oro", "boot_lans2004", "boot_ms5plus", "boot_mslug3b6":
-				fallthrough
-			case "rom_fatfur2", "rom_kof98", "rom_mslugx":
+			case "boot_garoubl", "boot_kf10th", "boot_kof97oro", "boot_lans2004", "boot_matrimbl", "boot_ms5plus", "boot_mslug3b6":
 				fallthrough
 			case "cmc42_bangbead", "cmc42_ganryu", "cmc42_kof99k", "cmc42_mslug3h", "cmc42_nitd", "cmc42_preisle2", "cmc42_s1945p", "cmc42_sengoku3", "cmc42_zupapa":
 				fallthrough
@@ -181,6 +180,8 @@ func (s software) IsSupportedSlot() bool {
 			case "pcm2_ms4p", "pcm2_mslug4", "pcm2_pnyaa", "pcm2_rotd":
 				fallthrough
 			case "pvc_kf2k3", "pvc_kf2k3h", "pvc_mslug5", "pvc_svc":
+				fallthrough
+			case "rom_fatfur2", "rom_kof98", "rom_mslugx":
 				fallthrough
 			case "sma_garou", "sma_garouh", "sma_kof2k", "sma_kof99", "sma_mslug3", "sma_mslug3a":
 				return true
