@@ -23881,6 +23881,372 @@ var mameGames = map[string]struct {
 		Action,
 		116,
 	},
+	"cthd2003": {
+		mameGame{
+			"kof2001",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"5003-p1.bin",
+							1048576,
+							[]byte{0xbb, 0x76, 0x02, 0xc1},
+						},
+						{
+							"5003-p2.bin",
+							4194304,
+							[]byte{0xad, 0xc1, 0xc2, 0x2b},
+						},
+					},
+				},
+				{
+					262144,
+					[]mameROM{
+						{
+							"5003-s1.bin",
+							131072,
+							[]byte{0x5b, 0xa2, 0x9a, 0xab},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{
+						{
+							"5003-m1.bin",
+							131072,
+							[]byte{0x1a, 0x8c, 0x27, 0x4b},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"262-v1-08-e0.v1",
+							4194304,
+							[]byte{0x83, 0xd4, 0x9e, 0xcf},
+						},
+						{
+							"262-v2-08-e0.v2",
+							4194304,
+							[]byte{0x00, 0x3f, 0x18, 0x43},
+						},
+						{
+							"262-v3-08-e0.v3",
+							4194304,
+							[]byte{0x2a, 0xe3, 0x8d, 0xbe},
+						},
+						{
+							"262-v4-08-e0.v4",
+							4194304,
+							[]byte{0x26, 0xec, 0x4d, 0xd9},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"5003-c1.bin",
+							8388608,
+							[]byte{0x68, 0xf5, 0x4b, 0x67},
+						},
+						{
+							"5003-c2.bin",
+							8388608,
+							[]byte{0x2f, 0x88, 0x49, 0xd5},
+						},
+						{
+							"5003-c3.bin",
+							8388608,
+							[]byte{0xac, 0x4a, 0xff, 0x71},
+						},
+						{
+							"5003-c4.bin",
+							8388608,
+							[]byte{0xaf, 0xef, 0x5d, 0x66},
+						},
+						{
+							"5003-c5.bin",
+							8388608,
+							[]byte{0xc7, 0xc1, 0xae, 0x50},
+						},
+						{
+							"5003-c6.bin",
+							8388608,
+							[]byte{0x61, 0x31, 0x97, 0xf9},
+						},
+						{
+							"5003-c7.bin",
+							8388608,
+							[]byte{0x64, 0xdd, 0xfe, 0x0f},
+						},
+						{
+							"5003-c8.bin",
+							8388608,
+							[]byte{0x91, 0x7a, 0x14, 0x39},
+						},
+					},
+				},
+			},
+		},
+		cthd2003,
+		"Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg)",
+		2003,
+		"bootleg",
+		Fighting,
+		20,
+	},
+	"ct2k3sp": {
+		mameGame{
+			"kof2001",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"5003-p1sp.bin",
+							1048576,
+							[]byte{0xab, 0x5c, 0x4d, 0xe0},
+						},
+						{
+							"5003-p2.bin",
+							4194304,
+							[]byte{0xad, 0xc1, 0xc2, 0x2b},
+						},
+					},
+				},
+				{
+					262144,
+					[]mameROM{
+						{
+							"5003-s1sp.bin",
+							262144,
+							[]byte{0x6c, 0x35, 0x5a, 0xb4},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{
+						{
+							"5003-m1.bin",
+							131072,
+							[]byte{0x1a, 0x8c, 0x27, 0x4b},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"262-v1-08-e0.v1",
+							4194304,
+							[]byte{0x83, 0xd4, 0x9e, 0xcf},
+						},
+						{
+							"262-v2-08-e0.v2",
+							4194304,
+							[]byte{0x00, 0x3f, 0x18, 0x43},
+						},
+						{
+							"262-v3-08-e0.v3",
+							4194304,
+							[]byte{0x2a, 0xe3, 0x8d, 0xbe},
+						},
+						{
+							"262-v4-08-e0.v4",
+							4194304,
+							[]byte{0x26, 0xec, 0x4d, 0xd9},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"5003-c1.bin",
+							8388608,
+							[]byte{0x68, 0xf5, 0x4b, 0x67},
+						},
+						{
+							"5003-c2.bin",
+							8388608,
+							[]byte{0x2f, 0x88, 0x49, 0xd5},
+						},
+						{
+							"5003-c3.bin",
+							8388608,
+							[]byte{0xac, 0x4a, 0xff, 0x71},
+						},
+						{
+							"5003-c4.bin",
+							8388608,
+							[]byte{0xaf, 0xef, 0x5d, 0x66},
+						},
+						{
+							"5003-c5.bin",
+							8388608,
+							[]byte{0xc7, 0xc1, 0xae, 0x50},
+						},
+						{
+							"5003-c6.bin",
+							8388608,
+							[]byte{0x61, 0x31, 0x97, 0xf9},
+						},
+						{
+							"5003-c7.bin",
+							8388608,
+							[]byte{0x64, 0xdd, 0xfe, 0x0f},
+						},
+						{
+							"5003-c8.bin",
+							8388608,
+							[]byte{0x91, 0x7a, 0x14, 0x39},
+						},
+					},
+				},
+			},
+		},
+		ct2k3sp,
+		"Crouching Tiger Hidden Dragon 2003 Super Plus (The King of Fighters 2001 bootleg)",
+		2003,
+		"bootleg",
+		Fighting,
+		19,
+	},
+	"ct2k3sa": {
+		mameGame{
+			"kof2001",
+			[...]mameArea{
+				{
+					5242880,
+					[]mameROM{
+						{
+							"5003-p1sa.bin",
+							1048576,
+							[]byte{0x01, 0x3a, 0x50, 0x9d},
+						},
+						{
+							"5003-p2.bin",
+							4194304,
+							[]byte{0xad, 0xc1, 0xc2, 0x2b},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{
+						{
+							"5003-s1sa.bin",
+							131072,
+							[]byte{0x4e, 0x1f, 0x7e, 0xae},
+						},
+					},
+				},
+				{
+					131072,
+					[]mameROM{
+						{
+							"5003-m1.bin",
+							131072,
+							[]byte{0x1a, 0x8c, 0x27, 0x4b},
+						},
+					},
+				},
+				{
+					16777216,
+					[]mameROM{
+						{
+							"262-v1-08-e0.v1",
+							4194304,
+							[]byte{0x83, 0xd4, 0x9e, 0xcf},
+						},
+						{
+							"262-v2-08-e0.v2",
+							4194304,
+							[]byte{0x00, 0x3f, 0x18, 0x43},
+						},
+						{
+							"262-v3-08-e0.v3",
+							4194304,
+							[]byte{0x2a, 0xe3, 0x8d, 0xbe},
+						},
+						{
+							"262-v4-08-e0.v4",
+							4194304,
+							[]byte{0x26, 0xec, 0x4d, 0xd9},
+						},
+					},
+				},
+				{
+					0,
+					[]mameROM{},
+				},
+				{
+					67108864,
+					[]mameROM{
+						{
+							"5003-c1.bin",
+							8388608,
+							[]byte{0x68, 0xf5, 0x4b, 0x67},
+						},
+						{
+							"5003-c2.bin",
+							8388608,
+							[]byte{0x2f, 0x88, 0x49, 0xd5},
+						},
+						{
+							"5003-c3.bin",
+							8388608,
+							[]byte{0xac, 0x4a, 0xff, 0x71},
+						},
+						{
+							"5003-c4.bin",
+							8388608,
+							[]byte{0xaf, 0xef, 0x5d, 0x66},
+						},
+						{
+							"5003-c5.bin",
+							8388608,
+							[]byte{0xc7, 0xc1, 0xae, 0x50},
+						},
+						{
+							"5003-c6.bin",
+							8388608,
+							[]byte{0x61, 0x31, 0x97, 0xf9},
+						},
+						{
+							"5003-c7.bin",
+							8388608,
+							[]byte{0x64, 0xdd, 0xfe, 0x0f},
+						},
+						{
+							"5003-c8.bin",
+							8388608,
+							[]byte{0x91, 0x7a, 0x14, 0x39},
+						},
+					},
+				},
+			},
+		},
+		ct2k3sa,
+		"Crouching Tiger Hidden Dragon 2003 Super Plus alternate (The King of Fighters 2001 bootleg)",
+		2003,
+		"bootleg",
+		Fighting,
+		19,
+	},
 	"ms4plus": {
 		mameGame{
 			"mslug4",

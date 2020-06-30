@@ -475,6 +475,168 @@ func bangbead(f *File, g mameGame, readers [][]io.Reader) error {
 	return commonCMC42Reader(f, g, readers, bangbeadGfxKey)
 }
 
+func cthdPReader(a mameArea, readers []io.Reader) ([]byte, error) {
+	b, err := commonPReader(a, readers, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	b[0xf415a] = 0xf9
+	b[0xf415b] = 0x4e
+	b[0xf415c] = 0x0f
+	b[0xf415d] = 0x00
+	b[0xf415e] = 0xf2
+	b[0xf415f] = 0x4c
+
+	for i := 0x1ae290; i < 0x1ae8d0; i++ {
+		b[i] = 0x00
+	}
+
+	for i := 0x1f8ef0; i < 0x1fa1f0; i += 4 {
+		b[i+1] -= 0x70
+		b[i+2] -= 0x10
+	}
+
+	for i := 0xac500; i < 0xac520; i++ {
+		b[i] = 0xff
+	}
+
+	b[0x991d0] = 0x03
+	b[0x991d1] = 0xdd
+	b[0x99306] = 0x03
+	b[0x99307] = 0xdd
+	b[0x99354] = 0x03
+	b[0x99355] = 0xdd
+	b[0x9943e] = 0x03
+	b[0x9943f] = 0xdd
+
+	return b, nil
+}
+
+func cthdMReader(a mameArea, readers []io.Reader) ([]byte, error) {
+	b, err := commonPaddedReader(a, readers)
+	if err != nil {
+		return nil, err
+	}
+
+	tmp := make([]byte, 0x20000)
+	copy(tmp[0x00000:0x08000], b[0x00000:])
+	copy(tmp[0x08000:0x10000], b[0x10000:])
+	copy(tmp[0x10000:0x18000], b[0x08000:])
+	copy(tmp[0x18000:0x20000], b[0x18000:])
+
+	return tmp, nil
+}
+
+// cthd2003 uses its own S, M and C encryption
+func cthd2003(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			if f.ROM[P], err = cthdPReader(g.area[P], readers[P]); err != nil {
+				return err
+			}
+		case S:
+			if f.ROM[S], err = commonPaddedReader(g.area[S], readers[S]); err != nil {
+				return err
+			}
+			tmp := make([]byte, 0x20000)
+			copy(tmp[0x00000:0x08000], f.ROM[S][0x00000:])
+			copy(tmp[0x08000:0x10000], f.ROM[S][0x10000:])
+			copy(tmp[0x10000:0x18000], f.ROM[S][0x08000:])
+			copy(tmp[0x18000:0x20000], f.ROM[S][0x18000:])
+			copy(f.ROM[S], tmp)
+		case M:
+			if f.ROM[M], err = cthdMReader(g.area[M], readers[M]); err != nil {
+				return err
+			}
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cthdDecrypt(b)
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// ct2k3sa uses its own M and C encryption
+func ct2k3sa(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			if f.ROM[P], err = cthdPReader(g.area[P], readers[P]); err != nil {
+				return err
+			}
+		case M:
+			if f.ROM[M], err = cthdMReader(g.area[M], readers[M]); err != nil {
+				return err
+			}
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cthdDecrypt(b)
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// ct2k3sp uses its own S, M and C encryption
+func ct2k3sp(f *File, g mameGame, readers [][]io.Reader) error {
+	for i := 0; i < Areas; i++ {
+		var err error
+		switch i {
+		case P:
+			if f.ROM[P], err = cthdPReader(g.area[P], readers[P]); err != nil {
+				return err
+			}
+		case S:
+			b, err := commonPaddedReader(g.area[S], readers[S])
+			if err != nil {
+				return err
+			}
+			f.ROM[S] = make([]byte, len(b))
+			for i := 0; i < len(b); i++ {
+				offset := bitswapInt(i&0x1ffff, 23, 22, 21, 20, 19, 18, 17, 3, 0, 1, 4, 2, 13, 14, 16, 15, 5, 6, 11, 10, 9, 8, 7, 12)
+				f.ROM[S][i] = b[offset+(i&^0x1ffff)]
+			}
+			copy(b, f.ROM[S])
+			copy(f.ROM[S][0x08000:0x10000], b[0x10000:])
+			copy(f.ROM[S][0x10000:0x18000], b[0x08000:])
+			copy(f.ROM[S][0x28000:0x30000], b[0x30000:])
+			copy(f.ROM[S][0x30000:0x38000], b[0x28000:])
+		case M:
+			if f.ROM[M], err = cthdMReader(g.area[M], readers[M]); err != nil {
+				return err
+			}
+		case C:
+			b, err := commonCReader(g.area[C], readers[C])
+			if err != nil {
+				return err
+			}
+			f.ROM[C] = cthdDecrypt(b)
+		default:
+			if f.ROM[i], err = commonPaddedReader(g.area[i], readers[i]); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // dragonsh has a couple of missing ROMs which are replaced with "erased" images of the expected size
 func dragonsh(f *File, g mameGame, readers [][]io.Reader) error {
 	for i := 0; i < Areas; i++ {
