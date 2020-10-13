@@ -9,6 +9,7 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
+	"log"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -105,6 +106,8 @@ func NewFile(path string) (*File, error) {
 		if err != errGameNotFound {
 			return nil, err
 		}
+
+		log.Println("Not found in MAME, attempting to guess")
 
 		if err := f.readGenericROM(path); err != nil {
 			return nil, err
@@ -330,7 +333,5 @@ func (f *File) readGenericROM(path string) error {
 		readers[area] = append(readers[area], reader)
 	}
 
-	return errors.New("FIXME")
-
-	// return common(f, g, readers)
+	return common(f, g, readers)
 }
