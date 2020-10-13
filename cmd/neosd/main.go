@@ -146,17 +146,12 @@ func convert(c *cli.Context) error {
 		n.Screenshot = uint32(c.Uint("screenshot"))
 	}
 
-	f, err := os.Create(filepath.Join(c.String("directory"), strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))+neo.Extension))
-	if err != nil {
-		return cli.NewExitError(err, 1)
-	}
-
 	b, err := n.MarshalBinary()
 	if err != nil {
 		return cli.NewExitError(err, 1)
 	}
 
-	if _, err := f.Write(b); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(c.String("directory"), strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))+neo.Extension), b, os.ModePerm); err != nil {
 		return cli.NewExitError(err, 1)
 	}
 
